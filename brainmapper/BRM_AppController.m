@@ -3,6 +3,7 @@
 //  brainmapper
 //
 //  Created by Joost Wagenaar on 11/6/12.
+//  Contributors: Allison Pearce, Veena Krish
 //  Copyright (c) 2012 University of Pennsylvania. All rights reserved.
 //
 
@@ -15,7 +16,7 @@
 #include <stdio.h>
 
 @implementation BRM_AppController;
-@synthesize mriArray, ctArray, hasDepth, inclSegm, textField, targetPath, destPath, resPath, window;
+@synthesize hasDepth, inclSegm, textField, targetPathCtl, destPath, resPath, window, ctPathCtl, mriPathCtl;
 @synthesize destPathPopover, checkBoxesPopover, tableViewPopover, progressPopover;
 
 NSString *updateFilePath, *logPath;
@@ -29,9 +30,12 @@ int programFinished = 0;
 	self = [super init];
     if(self){
         NSLog( @"init" );
-        mriArray = [[NSMutableArray alloc] init];
-        ctArray = [[NSMutableArray alloc] init];
+        //mriArray = [[NSMutableArray alloc] init];
+        //ctArray = [[NSMutableArray alloc] init];
         destPath = [[NSString alloc] init];
+        _mriPath = [[NSString alloc] init];
+        _ctPath = [[NSString alloc] init];
+        
     }
     
     
@@ -42,9 +46,6 @@ int programFinished = 0;
     NSFileManager *fileManager= [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
     NSLog(@"contents of respath directory:%@",contents);
-    
-    
-    
     
     return self;
     
@@ -60,10 +61,12 @@ int programFinished = 0;
     [processInd setStyle:NSProgressIndicatorBarStyle];
     [processInd setIndeterminate:NO];
     
-    [targetPath setDoubleAction:@selector(pathControlDoubleClick:)];
+    [targetPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
+    [mriPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
+    [ctPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
     
-    [mriView setAllowsMultipleSelection:YES];
-    [ctView setAllowsMultipleSelection:YES];
+    //[mriView setAllowsMultipleSelection:YES];
+    //[ctView setAllowsMultipleSelection:YES];
     
     //[threshSlider setAltIncrementValue:100];
     //[threshSlider setMinValue:1000];
@@ -148,10 +151,37 @@ int programFinished = 0;
     }
 
 -(void)pathControlDoubleClick:(id)sender {
-    if ([targetPath clickedPathComponentCell] != nil) {
-        [[NSWorkspace sharedWorkspace] openURL:[targetPath URL]];
+    if ([targetPathCtl clickedPathComponentCell] != nil) {
+        [[NSWorkspace sharedWorkspace] openURL:[targetPathCtl URL]];
+        NSLog(@"targetPathCtl double click");
+    }
+    else if ([mriPathCtl clickedPathComponentCell] != nil) {
+        [[NSWorkspace sharedWorkspace] openURL:[mriPathCtl URL]];
+        NSLog(@"mriPathCtl double click");
+    }
+    else if ([ctPathCtl clickedPathComponentCell] != nil ) {
+        [[NSWorkspace sharedWorkspace] openURL:[ctPathCtl URL]];
+        NSLog(@"ctPathCtl double click");
     }
 }
+
+/*-(void)targetPathControlDoubleClick:(id)sender {
+    if ([targetPathCtl clickedPathComponentCell] != nil) {
+        [[NSWorkspace sharedWorkspace] openURL:[targetPathCtl URL]];
+    }
+}
+
+-(void)mriPathControlDoubleClick:(id)sender {
+    if ([mriPathCtl clickedPathComponentCell] != nil) {
+        [[NSWorkspace sharedWorkspace] openURL:[mriPathCtl URL]];
+    }
+}
+
+-(void)ctPathControlDoubleClick:(id)sender {
+    if ([ctPathCtl clickedPathComponentCell] != nil ) {
+        [[NSWorkspace sharedWorkspace] openURL:[ctPathCtl URL]];
+    }
+}*/
 
 -(void)generateUpdate:(NSString *)words {
     /*
@@ -188,7 +218,9 @@ int programFinished = 0;
     NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
     
     //specifying output directory
-    destPath = [[targetPath URL] path];
+    destPath = [[targetPathCtl URL] path];
+    _mriPath = [[mriPathCtl URL] path];
+    _ctPath = [[ctPathCtl URL] path];
     logPath = [destPath stringByAppendingPathComponent:@"NSLogConsole.txt"];
     [self redirectNSLogToFile:logPath];
     
@@ -202,21 +234,22 @@ int programFinished = 0;
 
 
     //Check if MRI array and CT arrays are empty and if destPath hasn't been changed from /Applications......if so, alert the user
-      if ([mriArray count] == 0) {
-          [destPathPopover close];
-            NSLog(@"mirArray.count == 0");
-                [self generateUpdate:@"Please drag DCOM files from MRI into window..."];
+      //if ([mriArray count] == 0) {
+    if (![_mriPath hasSuffix:@".dcm"]) {
+        [destPathPopover close];
+            NSLog(@"no mri dcm input");
+                [self generateUpdate:@"Please drag one DICOM file from MRI into path bar"];
             [tableViewHelpButton setState:1];
             [self tableViewHelpButtonPushed:self];
             return;
         }
-        else if ([ctArray count] == 0) {
-                [self generateUpdate:@"Please drag DICOM files from CT into window and Start again"];
+        else if (![_ctPath hasSuffix:@".dcm"]) {
+                [self generateUpdate:@"Please drag one DICOM file from CT into path bar and start again"];
             [tableViewHelpButton setState:1];
             [self tableViewHelpButtonPushed:self];
             return;
         } else if ([destPath isEqualToString:@"/Applications"]) {
-                [self generateUpdate:@"Did you remember to specify a destination folder for the coregistered images?"];
+                [self generateUpdate:@"Please specify a destination folder for the coregistered images"];
                 [destPathHelpButton setState:1];
                 [self destPathHelpButtonPushed:self];
                 return;
@@ -224,9 +257,9 @@ int programFinished = 0;
         
     
     
-    [self stackDicomArray:(mriArray) forFile:@"mri"];
+    [self stackDicoms:_mriPath forFile:@"mri"];
     [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
-    [self stackDicomArray:(ctArray) forFile:@"ct"];
+    [self stackDicoms:_ctPath forFile:@"ct"];
     
     //and if both stackDicomArray calls returned successfully, start coregScript
     if ( stackingCompleted == 2 ) {
@@ -277,7 +310,7 @@ int programFinished = 0;
     }
 }
 
-- (void) stackDicomArray:(NSMutableArray*) arr
+- (void) stackDicoms:(NSString*) inDcm
                  forFile:(NSString*) inFile
 { //This method converts dicoms to nii's and gzips them. Should output the images:
   // mri.nii.gz and ct.nii.gz into the directory specified at destPath
@@ -296,8 +329,9 @@ int programFinished = 0;
         NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii",resPath]; 
         NSTask *task = [[NSTask alloc] init];
         [task setLaunchPath: execPath];
-        NSLog(@"exec path is: %@, input arg is %@", execPath, [arr objectAtIndex:0]);
-        [task setArguments:[NSArray arrayWithObject:[arr objectAtIndex:0]]];
+        NSLog(@"exec path is: %@, input arg is %@", execPath, inDcm);
+        //[task setArguments:[NSArray arrayWithObject:[arr objectAtIndex:0]]];
+        [task setArguments:[NSArray arrayWithObject:inDcm]];
         [task launch];
         [task waitUntilExit];
     
@@ -305,7 +339,7 @@ int programFinished = 0;
     [self incrementProgress:prog];
         
     //figure out which .nii.gz file is the one we need
-        NSString *dcmPath = [[arr objectAtIndex:0] stringByDeletingLastPathComponent];
+        NSString *dcmPath = [inDcm stringByDeletingLastPathComponent];
         NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
         NSString *nifti;
         NSLog(@"niftis count: %ld", (unsigned long)[niftis count]);
@@ -336,7 +370,7 @@ int programFinished = 0;
         }
         
         NSLog(@"moving %@ to %@", fromPath, movePath);
-        system([[NSString stringWithFormat:@"echo Moving nifti's to specified folder >> %@", updateFilePath] UTF8String]);
+        system([[NSString stringWithFormat:@"echo Moving niftis to specified folder >> %@", updateFilePath] UTF8String]);
         if(![fileManager moveItemAtPath:fromPath toPath:movePath error:&err]) {
             NSLog(@"error with moving nifti file: %@",err);
         }
@@ -381,11 +415,12 @@ int programFinished = 0;
 
 }
 
+
 //possibly rewrite digElectrodes here.....it works as the .sh but it's extremely slow because of all the math....
 
                        
                 
-
+/*
 #pragma mark TableView methods
 - (void) acceptFilenameDrag:(NSArray *) filename
 {
@@ -405,10 +440,8 @@ int programFinished = 0;
     
     
 	
-}
-
-
-
+} 
+ 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView {
     
     if(tableView==mriView){
@@ -441,6 +474,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     }
     
 }
+ */
 
 
 @end

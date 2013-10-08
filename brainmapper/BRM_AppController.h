@@ -13,9 +13,11 @@
 @interface BRM_AppController : NSObject
 {
     IBOutlet NSTextField *textField;
-    IBOutlet NSTableView *mriView;
-    IBOutlet NSTableView *ctView;
-    IBOutlet NSPathControl *targetPath;
+    //IBOutlet NSTableView *mriView;
+    //IBOutlet NSTableView *ctView;
+    IBOutlet NSPathControl *targetPathCtl;
+    IBOutlet NSPathControl *ctPathCtl;
+    IBOutlet NSPathControl *mriPathCtl;
     IBOutlet NSProgressIndicator *processInd;
     //IBOutlet NSSlider *threshSlider;
 
@@ -24,10 +26,11 @@
     IBOutlet NSButton *tableViewHelpButton;
     IBOutlet NSButton *progressHelpButton;
  
-    
-    NSMutableArray *mriArray;
-    NSMutableArray *ctArray;
+    //NSMutableArray *mriArray;
+    //NSMutableArray *ctArray;
     NSString *destPath;
+    //NSString *ctPath;
+    //NSString *mriPath;
     Boolean hasDepth, inclSegm;
     dispatch_queue_t bgqueue, main;
    
@@ -36,13 +39,14 @@
 
 //properties related to view
 @property (assign) IBOutlet NSWindow *window;
-@property (copy) NSMutableArray *mriArray, *ctArray;
+//@property (copy) NSMutableArray *mriArray, *ctArray;
 @property (readonly) Boolean hasDepth, inclSegm;
 @property (nonatomic) NSView *corner;
 
 //properties related to coregistration process
-@property (copy) NSString *destPath, *resPath;
-@property (nonatomic) IBOutlet NSPathControl *targetPath;
+@property (copy) NSString *destPath, *resPath, *ctPath, *mriPath;
+@property (nonatomic) IBOutlet NSPathControl *targetPathCtl;
+@property (nonatomic) IBOutlet NSPathControl *mriPathCtl, *ctPathCtl;
 @property (strong, nonatomic) IBOutlet NSTextField *threshold;
 //@property (nonatomic) IBOutlet NSSlider *threshSlider;
 
@@ -56,10 +60,11 @@
 
 //Methods & Actions Involved in Coregistration Process
 - (IBAction)start:(id)sender;
-- (void)stackDicomArray:(NSMutableArray*)arr forFile:(NSString*)inFile;
+- (void)stackDicoms:(NSString*)inDcm forFile:(NSString*)inFile;
 - (void)coregScript;
 - (void)pathControlDoubleClick:(id)sender;
-
+//- (void)mriPathControlDoubleClick:(id)sender;
+//- (void)ctPathControlDoubleClick:(id)sender;
 
 //Methods & Actions Involved in providing feedback
 - (void)monitorUpdateFile;

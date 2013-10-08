@@ -110,7 +110,7 @@
                         </textFieldCell>
                     </textField>
                     <progressIndicator fixedFrame="YES" maxValue="100" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="1317">
-                        <rect key="frame" x="20" y="30" width="643" height="20"/>
+                        <rect key="frame" x="17" y="30" width="646" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
                     <box verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="1464">
@@ -121,18 +121,18 @@
                         <font key="titleFont" metaFont="system"/>
                     </box>
                     <box verticalHuggingPriority="750" fixedFrame="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="1693">
-                        <rect key="frame" x="20" y="339" width="558" height="5"/>
+                        <rect key="frame" x="17" y="339" width="646" height="5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <font key="titleFont" metaFont="system"/>
                     </box>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1793">
-                        <rect key="frame" x="17" y="341" width="436" height="46"/>
+                        <rect key="frame" x="17" y="334" width="504" height="46"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="1794">
                             <font key="font" size="15" name="LucidaGrande"/>
-                            <string key="title">Welcome to BRAINMAPPER Image Coregistration Software.                                                                              </string>
+                            <string key="title">Welcome to BrainMapper Medical Image Coregistration Software!                                                                              </string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -192,7 +192,7 @@
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
-                                        <action selector="destPathHelpButtonPushed:" target="649" id="aSq-kq-Qxf"/>
+                                        <action selector="tableViewHelpButtonPushed:" target="649" id="BFt-6J-b53"/>
                                     </connections>
                                 </button>
                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AM8-m4-p82">
@@ -306,7 +306,7 @@
                         </connections>
                     </button>
                     <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2241">
-                        <rect key="frame" x="463" y="340" width="121" height="62"/>
+                        <rect key="frame" x="546" y="343" width="121" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="BRMPortalLogo" id="2242"/>
                     </imageView>
@@ -320,13 +320,16 @@
         <customObject id="649" customClass="BRM_AppController">
             <connections>
                 <outlet property="checkBoxesPopover" destination="1560" id="1620"/>
+                <outlet property="ctPathCtl" destination="bmw-dY-0Ku" id="Dbu-8e-U3L"/>
                 <outlet property="destPathHelpButton" destination="1488" id="1614"/>
                 <outlet property="destPathPopover" destination="1438" id="1617"/>
+                <outlet property="mriPathCtl" destination="ADQ-Qw-QW2" id="rst-2i-GBb"/>
                 <outlet property="processInd" destination="1317" id="1322"/>
                 <outlet property="progressHelpButton" destination="2062" id="2072"/>
                 <outlet property="progressPopover" destination="2075" id="2086"/>
+                <outlet property="tableViewHelpButton" destination="feV-x6-aoM" id="Sto-5t-kte"/>
                 <outlet property="tableViewPopover" destination="1564" id="1618"/>
-                <outlet property="targetPath" destination="1284" id="1289"/>
+                <outlet property="targetPathCtl" destination="1284" id="0pv-rz-iW6"/>
                 <outlet property="textField" destination="754" id="1212"/>
                 <outlet property="window" destination="371" id="1619"/>
             </connections>
@@ -343,7 +346,7 @@
                     </constraints>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" id="1598">
                         <font key="font" metaFont="system"/>
-                        <string key="title">Have the DICOM images from the MRI in one folder and the images from the CT in a different folder. Click the MRI button and drag one of the MRI images into the box. Repeat with CT. </string>
+                        <string key="title">Have the DICOM images from the MRI in one folder and the images from the CT in a different folder. Drag the first DICOM from each set onto the bars below.  </string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -435,7 +438,7 @@
                 <constraint firstItem="2079" firstAttribute="top" secondItem="2077" secondAttribute="top" constant="11" id="oxN-cO-PL2"/>
             </constraints>
         </customView>
-        <sliderCell controlSize="small" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="left" sliderType="linear" id="2543"/>
+        <sliderCell controlSize="small" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="2543"/>
     </objects>
     <resources>
         <image name="BRMPortalLogo" width="213" height="112"/>
