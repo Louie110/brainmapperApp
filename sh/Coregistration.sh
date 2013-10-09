@@ -3,7 +3,8 @@
 #  Coregistration.sh
 #  brainmapper
 #
-#  Created by Veena Krish on 7/26/2013
+#  Created by John Wu
+#  Adapted by Allison Pearce and Veena Krish, 2013
 #  Copyright (c) 2013 University of Pennsylvania. All rights reserved.
 
 RESPATH=$1
@@ -56,10 +57,6 @@ FSLCONFDIR=$FSLDIR/config
 #export FSLCONFDIR FSLMACHTYPE
 
 
-#echo "Path in init.sh is $PATH"
-echo "this is a test update from coregister.sh. paths have been set." >> ${UPDATEPATH}
-
-
 ###################################################
 ####    DO NOT ADD ANYTHING BELOW THIS LINE    ####
 ###################################################
@@ -80,8 +77,9 @@ fi
 
 #------------------------------------------------------------
 
-
-echo "setting more paths to images in coregister.sh" >> ${UPDATEPATH}
+cd ${IMAGEPATH}
+echo working directory is `pwd`
+echo "setting paths to images in coregister.sh" >> ${UPDATEPATH}
 T1=${IMAGEPATH}/mri.nii.gz # pre-resection
 template=${RESPATH}/NIREPG1template.nii.gz
 templateLabels=${RESPATH}/NIREPG1template_35labels.nii.gz
@@ -93,14 +91,12 @@ MRF_smoothness=0.1
 electrode_thres=${THRESH}
 
 # strip the skull in T1
-echo "right now:stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
+echo "right now: stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
 echo "bet2 $T1 ${T1%.nii.gz}_brain -m"
 echo "FSLOUTPUTTYPE $FSLOUTPUTTYPE"
-#(bet = Brain Extraction Tool. this program strips away the skull and creats a binary mask of the brain that gets saved in the root mri_brain)
+
 bet2 $T1 ${T1%.nii.gz}_brain -m
 echo "10" >> ${UPDATEPATH}
-echo Where even are you??? `pwd`
-
 
 
 if [ $SEGMENT == 1 ] ; then
@@ -112,8 +108,10 @@ echo "15" >> ${UPDATEPATH}
 echo "performing prior-based segmentation on the warped labels (this will also take a few hours)" >> ${UPDATEPATH}
 echo "35" >> ${UPDATEPATH}
 
-mkdir priorBasedSeg
-cd priorBasedSeg
+mkdir ${IMAGEPATH}/priorBasedSeg
+cd ${IMAGEPATH}/priorBasedSeg
+echo "create prior based seg directory at ${IMAGEPATH}" >> ${UPDATEPATH}
+
 for i in `seq 1 9`; do echo 0$i >> labels.txt; done
 for i in `seq 10 35`; do echo $i >> labels.txt; done
 for i in `cat labels.txt`
@@ -122,7 +120,6 @@ ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
 ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
 done
 echo "ImageMath completed; starting Atropos"
-echo Just reminding you, Current Working Directory is: `pwd`
 echo "50" >> ${UPDATEPATH}
 
 cp $T1 mri.nii.gz
@@ -135,11 +132,6 @@ cp NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz ../seg35labels_prior0.
 
 cd ..
 fi
-# (now pwd is Debug)
-
-
-
-
 
 
 # align CT to T1 and extract the electrodes

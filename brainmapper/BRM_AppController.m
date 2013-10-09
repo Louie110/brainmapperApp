@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 @implementation BRM_AppController;
-@synthesize hasDepth, inclSegm, textField, targetPathCtl, destPath, resPath, window, ctPathCtl, mriPathCtl;
+@synthesize inclSegm, textField, targetPathCtl, destPath, resPath, window, ctPathCtl, mriPathCtl;
 @synthesize destPathPopover, checkBoxesPopover, tableViewPopover, progressPopover;
 
 NSString *updateFilePath, *logPath;
@@ -30,14 +30,11 @@ int programFinished = 0;
 	self = [super init];
     if(self){
         NSLog( @"init" );
-        //mriArray = [[NSMutableArray alloc] init];
-        //ctArray = [[NSMutableArray alloc] init];
         destPath = [[NSString alloc] init];
         _mriPath = [[NSString alloc] init];
         _ctPath = [[NSString alloc] init];
         
     }
-    
     
     //This is just for checking to see that we have the right resources, not actually involved in coregistration
     resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
@@ -50,7 +47,6 @@ int programFinished = 0;
     return self;
     
 }
-
 
 
 //initialize everything that's displayed
@@ -215,6 +211,7 @@ int programFinished = 0;
 - (IBAction)start:(id)sender;
 {
     
+    Boolean hasDepth=false;
     NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
     
     //specifying output directory
@@ -395,20 +392,15 @@ int programFinished = 0;
 {
     NSLog(@"coregScript started");
     
-   
-    //resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
-    
     //(to do: allow user to set threshold value)
     int thresh = 2000;
     
+    Boolean hasDepth= false;
     NSString *execPath = [NSString stringWithFormat:@"source %@/Coregistration.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (hasDepth), thresh];
     NSLog(@"system call: %@",execPath);
     const char* arg = [execPath cStringUsingEncoding:[NSString defaultCStringEncoding]];
     int status = system(arg);
     NSLog(@"System call returned %d", status);
-    
-        NSString *logPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"];
-    
     
     programFinished = 1;
 

@@ -31,7 +31,7 @@
     NSString *destPath;
     //NSString *ctPath;
     //NSString *mriPath;
-    Boolean hasDepth, inclSegm;
+    Boolean inclSegm;
     dispatch_queue_t bgqueue, main;
    
     
@@ -40,7 +40,7 @@
 //properties related to view
 @property (assign) IBOutlet NSWindow *window;
 //@property (copy) NSMutableArray *mriArray, *ctArray;
-@property (readonly) Boolean hasDepth, inclSegm;
+@property (readonly) Boolean inclSegm;
 @property (nonatomic) NSView *corner;
 
 //properties related to coregistration process
