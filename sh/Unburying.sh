@@ -131,6 +131,8 @@ echo Before loop `date`
 
 #7. Create a path from bCOM in the direction of each electrode's eDir
 value=1
+counter=0
+oldPoint=$eCOMx\ $eCOMy\ $eCOMz
 until [ $value -eq 0 ]; do
 newPoint=$eCOMx\ $eCOMy\ $eCOMz
 value=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
@@ -140,7 +142,11 @@ elif [ "$value" == 1 ]; then
 eCOMx=$( echo "scale=4; ${eCOMx}+${stepX}" | bc);
 eCOMy=$( echo "scale=4; ${eCOMy}+${stepY}" | bc);
 eCOMz=$( echo "scale=4; ${eCOMz}+${stepZ}" | bc);
+counter=`expr $counter + 1`
 continue
+elif ["$counter" == 20]; then
+    newPoint=$oldPoint
+    break
 fi
 break
 done

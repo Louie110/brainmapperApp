@@ -103,10 +103,6 @@ echo Where even are you??? `pwd`
 
 
 
-
-
-
-
 if [ $SEGMENT == 1 ] ; then
 # warp the NIREP template to skull-stripped T1
 echo "warping the NIREP template to skull-stripped T1 (this will take a few hours)" >> ${UPDATEPATH}
@@ -194,8 +190,8 @@ c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii
 cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}
 #Open ITK-SNAP in background so nothing freezes...
-itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
-$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l unsegmentedLabels.txt &
+#itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
+#$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l unsegmentedLabels.txt &
 fi
 
 
