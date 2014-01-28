@@ -149,6 +149,7 @@ c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${electrode_thres} 99999 1 0 -o ele
 echo "90" >> ${UPDATEPATH}
 #makeSpheres...if you unbury, you don't need this separately....
 if [ $UNBURY != 1 ]; then
+echo "in the no unbury block" >> ${UPDATEPATH}
 c3d electrode_aligned.nii.gz -connected-components -split -foreach -centroid -endfor >> centroidFile.txt
 cat centroidFile.txt | sed 's/[^0-9.]/ /g' >> eCenters.txt
 c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o electrode_aligned.nii.gz
@@ -156,7 +157,7 @@ fi
 
 #digElectrodes:
 if [ $UNBURY == 1 ]; then
-echo calling Unburying.sh
+echo "calling unbury" >> ${UPDATEPATH}
 ${RESPATH}/Unburying.sh electrode_aligned.nii.gz ${IMAGEPATH}/mri_brain_mask.nii.gz $RESPATH $UPDATEPATH
 unburied="unburied_"
 fi
@@ -164,7 +165,7 @@ fi
 
 echo "95" >> ${UPDATEPATH}
 # combine electrodes with T1 segmentation
-echo "combining electrodes with T1 segmentation and launching ITK-SNAP" >> UPDATEPATH
+echo "combining electrodes with T1 segmentation and launching ITK-SNAP" >> ${UPDATEPATH}
 if [ $SEGMENT == 1 ]; then
 
 c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
@@ -177,7 +178,8 @@ fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
 if [ $SEGMENT != 1 ]; then
-
+echo "did not perform segmentation" >> ${UPDATEPATH}
+echo ${unburied} >> ${UPDATEPATH}
 c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${unburied}electrode_seg.nii.gz
 cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}

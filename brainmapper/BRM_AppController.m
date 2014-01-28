@@ -223,7 +223,7 @@ int programFinished = 0;
     
     
     //creating log file
-    updateFilePath = [NSString stringWithFormat:@"%@/udpateFile.txt",destPath];
+    updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt",destPath];
     system([[NSString stringWithFormat:@"echo This is the Update File >> %@", updateFilePath] UTF8String]);
     system([[NSString stringWithFormat:@"echo continuing to Stack DICOMs and convert images >> %@", updateFilePath] UTF8String]);
     NSLog(@"Update File created? %@", updateFilePath);
