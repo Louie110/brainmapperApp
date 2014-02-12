@@ -88,7 +88,6 @@ CT=${IMAGEPATH}/ct.nii.gz # with electrodes
 #T2=20070922_t2w003.nii.gz # post-resection
 #resection=20070922_t2w003_resectedRegion.nii.gz
 MRF_smoothness=0.1
-electrode_thres=${THRESH}
 
 # strip the skull in T1
 echo "right now: stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
@@ -142,7 +141,7 @@ echo "80" >> ${UPDATEPATH}
 echo finished ANTS and starting c3d to finagle threshold and find electrodes and also output to electrode_aligned.
 # extracting electrodes:
 echo "Extracting electrodes with Convert3D" >> ${UPDATEPATH}
-c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${electrode_thres} 99999 1 0 -o electrode_aligned.nii.gz
+c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_aligned.nii.gz
 
 
 
@@ -160,6 +159,8 @@ if [ $UNBURY == 1 ]; then
 echo "calling unbury" >> ${UPDATEPATH}
 ${RESPATH}/Unburying.sh electrode_aligned.nii.gz ${IMAGEPATH}/mri_brain_mask.nii.gz $RESPATH $UPDATEPATH
 unburied="unburied_"
+else
+unburied=""
 fi
 
 
@@ -179,7 +180,9 @@ fi
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
 if [ $SEGMENT != 1 ]; then
 echo "did not perform segmentation" >> ${UPDATEPATH}
-echo ${unburied} >> ${UPDATEPATH}
+echo "unburied is: ${unburied}" >> ${UPDATEPATH}
+echo "current directory: `pwd`" >> ${UPDATEPATH}
+echo "which c3d: `which c3d`" >> ${UPDATEPATH}
 c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${unburied}electrode_seg.nii.gz
 cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}

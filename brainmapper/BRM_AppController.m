@@ -396,7 +396,8 @@ int programFinished = 0;
     int thresh = 2000;
     
     Boolean hasDepth= false;
-    NSString *execPath = [NSString stringWithFormat:@"source %@/Coregistration.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (hasDepth), thresh];
+    //NSString *execPath = [NSString stringWithFormat:@"source %@/coregister2.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (hasDepth), thresh];
+    NSString *execPath = [NSString stringWithFormat:@"source %@/Coregistration.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (!hasDepth), thresh];
     NSLog(@"system call: %@",execPath);
     const char* arg = [execPath cStringUsingEncoding:[NSString defaultCStringEncoding]];
     int status = system(arg);

@@ -14,6 +14,7 @@
 		09452C5316CC6CF7003A3007 /* ThresholdImage in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4D16CC6CF7003A3007 /* ThresholdImage */; };
 		09452C5416CC6CF7003A3007 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4E16CC6CF7003A3007 /* ImageMath */; };
 		09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09452C5516CC6D07003A3007 /* antsIntroduction.sh */; };
+		0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */; };
 		095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF416CC48DD00BC9058 /* dcm2nii */; };
 		095ECDFE16CC48DD00BC9058 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF516CC48DD00BC9058 /* bet2 */; };
 		095ECDFF16CC48DD00BC9058 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF616CC48DD00BC9058 /* c3d */; };
@@ -22,6 +23,8 @@
 		0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */; };
 		0984705A16CAC0CA00D50215 /* NIREPG1template.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */; };
 		0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */; };
+		09D857ED18985C6D00665278 /* coregister2.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09D857EC18985C6D00665278 /* coregister2.sh */; };
+		09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */ = {isa = PBXBuildFile; fileRef = E17D2CE917AF9F730082E560 /* Unburying.sh */; };
 		C82BF0F9165187BF00A9D734 /* BRMDragDropTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */; };
 		C873BCC516552C65000E599B /* helpfiles in Resources */ = {isa = PBXBuildFile; fileRef = C873BCC416552C65000E599B /* helpfiles */; };
 		C8CDF36F164809AA00BC4F9C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CDF36E164809AA00BC4F9C /* Cocoa.framework */; };
@@ -42,6 +45,7 @@
 		09452C4D16CC6CF7003A3007 /* ThresholdImage */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ThresholdImage; sourceTree = "<group>"; };
 		09452C4E16CC6CF7003A3007 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
 		09452C5516CC6D07003A3007 /* antsIntroduction.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = antsIntroduction.sh; sourceTree = "<group>"; };
+		0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1_3tissue.nii.gz; sourceTree = "<group>"; };
 		095ECDF416CC48DD00BC9058 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
 		095ECDF516CC48DD00BC9058 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
 		095ECDF616CC48DD00BC9058 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
@@ -50,6 +54,7 @@
 		0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_35labels.nii.gz; sourceTree = "<group>"; };
 		0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template.nii.gz; sourceTree = "<group>"; };
 		0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_InverseWarp.nii.gz; sourceTree = "<group>"; };
+		09D857EC18985C6D00665278 /* coregister2.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = coregister2.sh; sourceTree = "<group>"; };
 		C82BF0F7165187BF00A9D734 /* BRMDragDropTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMDragDropTableView.h; sourceTree = "<group>"; };
 		C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMDragDropTableView.m; sourceTree = "<group>"; };
 		C873BCC416552C65000E599B /* helpfiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helpfiles; sourceTree = "<group>"; };
@@ -86,6 +91,7 @@
 		0984704C16CAC06700D50215 /* templates */ = {
 			isa = PBXGroup;
 			children = (
+				0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */,
 				0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */,
 				0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */,
 				0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */,
@@ -113,6 +119,7 @@
 		09EECA4F1692860B001FD8C7 /* sh */ = {
 			isa = PBXGroup;
 			children = (
+				09D857EC18985C6D00665278 /* coregister2.sh */,
 				E1E99FE217A2C72D00CFB87B /* Coregistration.sh */,
 				E17D2CE917AF9F730082E560 /* Unburying.sh */,
 				09452C5516CC6D07003A3007 /* antsIntroduction.sh */,
@@ -240,6 +247,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */,
+				09D857ED18985C6D00665278 /* coregister2.sh in Resources */,
 				E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */,
 				C8CDF379164809AA00BC4F9C /* InfoPlist.strings in Resources */,
 				C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */,
@@ -249,6 +258,7 @@
 				0984705A16CAC0CA00D50215 /* NIREPG1template.nii.gz in Resources */,
 				0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */,
 				095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */,
+				0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */,
 				095ECDFE16CC48DD00BC9058 /* bet2 in Resources */,
 				095ECDFF16CC48DD00BC9058 /* c3d in Resources */,
 				095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */,
