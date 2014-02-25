@@ -10,7 +10,7 @@
 RESPATH=$1
 IMAGEPATH=$2
 UPDATEPATH=$3
-echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH"
+echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES" >> ${UPDATEPATH}
 SEGMENT=$4
 UNBURY=$5
 THRES=$6
@@ -57,10 +57,6 @@ FSLCONFDIR=$FSLDIR/config
 #export FSLCONFDIR FSLMACHTYPE
 
 
-###################################################
-####    DO NOT ADD ANYTHING BELOW THIS LINE    ####
-###################################################
-
 if [ -f /usr/local/etc/fslconf/fsl.sh ] ; then
 . /usr/local/etc/fslconf/fsl.sh ;
 fi
@@ -79,7 +75,6 @@ fi
 
 cd ${IMAGEPATH}
 echo working directory is `pwd`
-echo "setting paths to images in coregister.sh" >> ${UPDATEPATH}
 T1=${IMAGEPATH}/mri.nii.gz # pre-resection
 template=${RESPATH}/NIREPG1template.nii.gz
 templateLabels=${RESPATH}/NIREPG1template_35labels.nii.gz
@@ -90,9 +85,7 @@ CT=${IMAGEPATH}/ct.nii.gz # with electrodes
 MRF_smoothness=0.1
 
 # strip the skull in T1
-echo "right now: stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
-echo "bet2 $T1 ${T1%.nii.gz}_brain -m"
-echo "FSLOUTPUTTYPE $FSLOUTPUTTYPE"
+echo "stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
 
 bet2 $T1 ${T1%.nii.gz}_brain -m
 echo "10" >> ${UPDATEPATH}
@@ -135,10 +128,10 @@ fi
 
 # align CT to T1 and extract the electrodes
 echo "Aligning CT to T1" >> ${UPDATEPATH}
-echo Note that we are located at `pwd` and you should start seeing files that start with ct_ getting outputted here.
 antsIntroduction.sh -d 3 -r $T1 -i $CT -o ${CT%.nii.gz}_ -t RA -s MI
 echo "80" >> ${UPDATEPATH}
-echo finished ANTS and starting c3d to finagle threshold and find electrodes and also output to electrode_aligned.
+echo "Finished ANTS and starting c3d" >> ${UPDATEPATH}
+
 # extracting electrodes:
 echo "Extracting electrodes with Convert3D" >> ${UPDATEPATH}
 c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_aligned.nii.gz
@@ -148,16 +141,52 @@ c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_ali
 echo "90" >> ${UPDATEPATH}
 #makeSpheres...if you unbury, you don't need this separately....
 if [ $UNBURY != 1 ]; then
-echo "in the no unbury block" >> ${UPDATEPATH}
-c3d electrode_aligned.nii.gz -connected-components -split -foreach -centroid -endfor >> centroidFile.txt
-cat centroidFile.txt | sed 's/[^0-9.]/ /g' >> eCenters.txt
+#echo "in the no unbury block" >> ${UPDATEPATH}
+#c3d electrode_aligned.nii.gz -connected-components -split -foreach -centroid -endfor >> centroidFile.txt
+#cat centroidFile.txt | sed 's/[^0-9.]/ /g' >> eCenters.txt
+#c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o electrode_aligned.nii.gz
+
+# 1. unload files
+
+c3d ${IMAGEPATH}/electrode_aligned.nii.gz -binarize -o eImg.img
+c3d ${IMAGEPATH}/mri_brain.nii.gz -binarize -o bImg.img
+
+#2. get centroids:
+numCOMPS=$(c3d eImg.img -comp | head -n 1 | sed 's/[^0-9]/ /g')
+echo numCOMPS = $numCOMPS
+
+if [ $numCOMPS -lt 40 ]; then
+c3d eImg.img -connected-components -split -foreach -centroid -endfor | sed -e '/VOX/d' -e 's/[^0-9.-]/ /g' >> eCent.txt #(this gets centroids, in mm's)
+else
+#first figure out how many connected regions there are.
+let "numRepeats = $numCOMPS / 30 + 1"
+#then find centroids in batches of 30 connected regions so you don't run into memory problems
+echo "Locating electrodes for makeSpheres" >> $UPDATEPATH
+rm -f eCent.txt
+for i in `seq 0 $(expr $numRepeats - 2)`; do
+uIn=$(expr 30 \* $i + 1)
+echo $uIn
+uIn2=$(expr $uIn + 29)
+#(for some reason, thresholding from 0 to some uIn2 doesn't seem to work...make sure it starts at 1)
+c3d eImg.img -comp -threshold $uIn $uIn2 1 0 -comp -split -foreach -centroid -endfor >> eCent.txt
+echo finished c3d with uIn: $uIn and uIn2: $uIn2
+done
+uIn=$(expr $uIn + 30)
+uIn2=$numCOMPS
+c3d eImg.img -comp -threshold $uIn $uIn2 1 0 -comp -split -foreach -centroid -endfor >> eCent.txt
+echo finished c3d with uIn: $uIn and numCOMPS: $numCOMPS
+fi
+
+
+cat eCent.txt | sed -e '/VOX/d' -e '/There/d' -e '/Largest/d' -e 's/[^0-9.-]/ /g' >> eCenters.txt #(this gets rid of unneccessary info in the txt file)
 c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o electrode_aligned.nii.gz
+
 fi
 
 #digElectrodes:
 if [ $UNBURY == 1 ]; then
-echo "calling unbury" >> ${UPDATEPATH}
-${RESPATH}/Unburying.sh electrode_aligned.nii.gz ${IMAGEPATH}/mri_brain_mask.nii.gz $RESPATH $UPDATEPATH
+echo "unburying electrodes" >> ${UPDATEPATH}
+${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
 unburied="unburied_"
 else
 unburied=""
@@ -166,25 +195,22 @@ fi
 
 echo "95" >> ${UPDATEPATH}
 # combine electrodes with T1 segmentation
-echo "combining electrodes with T1 segmentation and launching ITK-SNAP" >> ${UPDATEPATH}
+echo "combining electrodes with T1 segmentation" >> ${UPDATEPATH}
 if [ $SEGMENT == 1 ]; then
 
 c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
 cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}
 #Open ITK-SNAP in background so nothing freezes...
-itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
-$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l segmentedLabels_preResec.txt &
+#itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
+#$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l segmentedLabels_preResec.txt &
 fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
 if [ $SEGMENT != 1 ]; then
-echo "did not perform segmentation" >> ${UPDATEPATH}
-echo "unburied is: ${unburied}" >> ${UPDATEPATH}
-echo "current directory: `pwd`" >> ${UPDATEPATH}
-echo "which c3d: `which c3d`" >> ${UPDATEPATH}
-c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${unburied}electrode_seg.nii.gz
-cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
+echo "did not perform segmentation; combining electrodes with mri" >> ${UPDATEPATH}
+c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
+#cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}
 #Open ITK-SNAP in background so nothing freezes...
 #itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
@@ -193,7 +219,6 @@ fi
 
 
 echo "100" >> ${UPDATEPATH}
-
 
 
 

@@ -59,11 +59,6 @@ fi
 cat eCent.txt | sed -e '/VOX/d' -e '/There/d' -e '/Largest/d' -e 's/[^0-9.-]/ /g' >> eCenters.txt #(this gets rid of unneccessary info in the txt file)
 
 
-
-
-
-
-
 #3. get center of brain:
 
 c3d mri_brain.nii.gz -info > info
@@ -128,27 +123,31 @@ echo Before loop `date`
 
 
 
-
+#ALLISON FIX THIS STUFF HERE
 #7. Create a path from bCOM in the direction of each electrode's eDir
 value=1
 counter=0
 oldPoint=$eCOMx\ $eCOMy\ $eCOMz
 until [ $value -eq 0 ]; do
+echo "counter is: $counter"
+echo "value is: $value"
 newPoint=$eCOMx\ $eCOMy\ $eCOMz
 value=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
 status=$?
-if [ "$status" != 0 ]; then break
-elif [ "$value" == 1 ]; then
+if [ $status -ne 0 ]; then break
+elif [ $counter -eq 20 ]; then
+newPoint=$oldPoint
+echo "counter reached 20; breaking"
+break
+fi
+#elif [ $value -eq 1 ]; then
 eCOMx=$( echo "scale=4; ${eCOMx}+${stepX}" | bc);
 eCOMy=$( echo "scale=4; ${eCOMy}+${stepY}" | bc);
 eCOMz=$( echo "scale=4; ${eCOMz}+${stepZ}" | bc);
 counter=`expr $counter + 1`
-continue
-elif ["$counter" == 20]; then
-    newPoint=$oldPoint
-    break
-fi
-break
+#continue
+#fi
+#break
 done
 echo "$newPoint 1" >> landmarks
 echo $i $newPoint landmarked
