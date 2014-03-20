@@ -17,7 +17,6 @@
 		0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */; };
 		095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF416CC48DD00BC9058 /* dcm2nii */; };
 		095ECDFE16CC48DD00BC9058 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF516CC48DD00BC9058 /* bet2 */; };
-		095ECDFF16CC48DD00BC9058 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF616CC48DD00BC9058 /* c3d */; };
 		095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */ = {isa = PBXBuildFile; fileRef = 095ECE0816CC48E800BC9058 /* fslmachtype.sh */; };
 		095ECE0D16CC48E800BC9058 /* init.sh in Resources */ = {isa = PBXBuildFile; fileRef = 095ECE0916CC48E800BC9058 /* init.sh */; };
 		0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */; };
@@ -33,6 +32,7 @@
 		C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF37D164809AA00BC4F9C /* Credits.rtf */; };
 		C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF383164809AB00BC4F9C /* MainMenu.xib */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
+		E12ACA9418D72C61000B5625 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E12ACA9318D72C61000B5625 /* c3d */; };
 		E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */; };
 		E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FE217A2C72D00CFB87B /* Coregistration.sh */; };
 /* End PBXBuildFile section */
@@ -48,7 +48,6 @@
 		0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1_3tissue.nii.gz; sourceTree = "<group>"; };
 		095ECDF416CC48DD00BC9058 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
 		095ECDF516CC48DD00BC9058 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
-		095ECDF616CC48DD00BC9058 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
 		095ECE0816CC48E800BC9058 /* fslmachtype.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = fslmachtype.sh; sourceTree = "<group>"; };
 		095ECE0916CC48E800BC9058 /* init.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = init.sh; sourceTree = "<group>"; };
 		0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_35labels.nii.gz; sourceTree = "<group>"; };
@@ -71,6 +70,7 @@
 		C8CDF384164809AB00BC4F9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C8E3442A16497EA000A42105 /* BRM_AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_AppController.h; sourceTree = "<group>"; };
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
+		E12ACA9318D72C61000B5625 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = c3d; path = "/Users/VeenaKrish/Documents/LittLab3-Testing/brainmapperApp/brainmapper/bin/c3d"; sourceTree = "<absolute>"; };
 		E17D2CE917AF9F730082E560 /* Unburying.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Unburying.sh; sourceTree = "<group>"; };
 		E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMPortalLogo.png; sourceTree = "<group>"; };
 		E1E99FE217A2C72D00CFB87B /* Coregistration.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Coregistration.sh; sourceTree = "<group>"; };
@@ -110,7 +110,7 @@
 				09452C4E16CC6CF7003A3007 /* ImageMath */,
 				095ECDF416CC48DD00BC9058 /* dcm2nii */,
 				095ECDF516CC48DD00BC9058 /* bet2 */,
-				095ECDF616CC48DD00BC9058 /* c3d */,
+				E12ACA9318D72C61000B5625 /* c3d */,
 			);
 			name = bin;
 			path = brainmapper/bin;
@@ -260,7 +260,6 @@
 				095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */,
 				0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */,
 				095ECDFE16CC48DD00BC9058 /* bet2 in Resources */,
-				095ECDFF16CC48DD00BC9058 /* c3d in Resources */,
 				095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */,
 				095ECE0D16CC48E800BC9058 /* init.sh in Resources */,
 				09452C4F16CC6CF7003A3007 /* ANTS in Resources */,
@@ -269,6 +268,7 @@
 				09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */,
 				09452C5316CC6CF7003A3007 /* ThresholdImage in Resources */,
 				09452C5416CC6CF7003A3007 /* ImageMath in Resources */,
+				E12ACA9418D72C61000B5625 /* c3d in Resources */,
 				09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */,
 				E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */,
 			);

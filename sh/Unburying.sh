@@ -122,32 +122,31 @@ echo "$stepX $stepY $stepZ" >> steps
 echo Before loop `date`
 
 
-
-#ALLISON FIX THIS STUFF HERE
+# this really should work......
 #7. Create a path from bCOM in the direction of each electrode's eDir
 value=1
 counter=0
 oldPoint=$eCOMx\ $eCOMy\ $eCOMz
-until [ $value -eq 0 ]; do
+until [[ $value -eq 0 ]]; do
 echo "counter is: $counter"
 echo "value is: $value"
 newPoint=$eCOMx\ $eCOMy\ $eCOMz
 value=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
 status=$?
-if [ $status -ne 0 ]; then break
-elif [ $counter -eq 20 ]; then
+if [[ $status -ne 0 ]]; then break
+elif [[ $counter -eq 20 ]]; then
 newPoint=$oldPoint
 echo "counter reached 20; breaking"
 break
-fi
-#elif [ $value -eq 1 ]; then
-eCOMx=$( echo "scale=4; ${eCOMx}+${stepX}" | bc);
-eCOMy=$( echo "scale=4; ${eCOMy}+${stepY}" | bc);
-eCOMz=$( echo "scale=4; ${eCOMz}+${stepZ}" | bc);
-counter=`expr $counter + 1`
-#continue
 #fi
-#break
+elif [[ $value -eq 1 ]]; then
+    eCOMx=$( echo "scale=4; ${eCOMx}+${stepX}" | bc);
+    eCOMy=$( echo "scale=4; ${eCOMy}+${stepY}" | bc);
+    eCOMz=$( echo "scale=4; ${eCOMz}+${stepZ}" | bc);
+    counter=`expr $counter + 1`
+    continue
+fi
+break
 done
 echo "$newPoint 1" >> landmarks
 echo $i $newPoint landmarked

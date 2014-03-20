@@ -108,8 +108,8 @@ for i in `seq 1 9`; do echo 0$i >> labels.txt; done
 for i in `seq 10 35`; do echo $i >> labels.txt; done
 for i in `cat labels.txt`
 do
-ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
-ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
+${RESPATH}ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
+${RESPATH}ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
 done
 echo "ImageMath completed; starting Atropos"
 echo "50" >> ${UPDATEPATH}
@@ -186,6 +186,7 @@ fi
 #digElectrodes:
 if [ $UNBURY == 1 ]; then
 echo "unburying electrodes" >> ${UPDATEPATH}
+chmod ${RESPATH}/Unburying.sh 755
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
 unburied="unburied_"
 else
@@ -196,7 +197,7 @@ fi
 echo "95" >> ${UPDATEPATH}
 # combine electrodes with T1 segmentation
 echo "combining electrodes with T1 segmentation" >> ${UPDATEPATH}
-if [ $SEGMENT == 1 ]; then
+if [[ $SEGMENT == 1 ]]; then
 
 c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
 cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
@@ -207,7 +208,7 @@ cd ${IMAGEPATH}
 fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
-if [ $SEGMENT != 1 ]; then
+if [[ $SEGMENT != 1 ]]; then
 echo "did not perform segmentation; combining electrodes with mri" >> ${UPDATEPATH}
 c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 #cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
