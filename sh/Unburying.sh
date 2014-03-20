@@ -134,7 +134,7 @@ newPoint=$eCOMx\ $eCOMy\ $eCOMz
 value=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
 status=$?
 if [[ $status -ne 0 ]]; then break
-elif [[ $counter -eq 20 ]]; then
+elif [[ $counter -eq 40 ]]; then
 newPoint=$oldPoint
 echo "counter reached 20; breaking"
 break
