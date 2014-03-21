@@ -186,7 +186,7 @@ fi
 #digElectrodes:
 if [ $UNBURY == 1 ]; then
 echo "unburying electrodes" >> ${UPDATEPATH}
-chmod ${RESPATH}/Unburying.sh 755
+chmod 755 ${RESPATH}/Unburying.sh
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
 unburied="unburied_"
 else

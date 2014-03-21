@@ -102,6 +102,12 @@ eCOMx=${eCOMS[0]}
 eCOMy=${eCOMS[1]}
 eCOMz=${eCOMS[2]}
 
+startValue=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
+echo $startValue >> startValues
+if [[ $startValue -eq 0 ]]; then
+echo Artifact found!!
+continue
+fi 
 
 #TRY: instead of reducing to lowest terms with the gcd, just normalize the vector....I'm doing this in physical mm's so having decimals shouldn't matter.
 norm=$( echo "scale=10; ${dirX}^2 + ${dirY}^2 + ${dirZ}^2" | bc )
@@ -128,13 +134,13 @@ value=1
 counter=0
 oldPoint=$eCOMx\ $eCOMy\ $eCOMz
 until [[ $value -eq 0 ]]; do
-echo "counter is: $counter"
-echo "value is: $value"
+#echo "counter is: $counter"
+#echo "value is: $value"
 newPoint=$eCOMx\ $eCOMy\ $eCOMz
 value=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
 status=$?
 if [[ $status -ne 0 ]]; then break
-elif [[ $counter -eq 40 ]]; then
+elif [[ $counter -eq 50 ]]; then
 newPoint=$oldPoint
 echo "counter reached 20; breaking"
 break
