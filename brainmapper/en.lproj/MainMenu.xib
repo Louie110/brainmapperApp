@@ -311,6 +311,7 @@
                 <outlet property="processInd" destination="1317" id="1322"/>
                 <outlet property="progressHelpButton" destination="2062" id="2072"/>
                 <outlet property="progressPopover" destination="2075" id="2086"/>
+                <outlet property="startButton" destination="556" id="4lH-nz-MYx"/>
                 <outlet property="tableViewHelpButton" destination="feV-x6-aoM" id="Sto-5t-kte"/>
                 <outlet property="tableViewPopover" destination="1564" id="1618"/>
                 <outlet property="targetPathCtl" destination="1284" id="0pv-rz-iW6"/>
@@ -422,7 +423,7 @@
                 <constraint firstItem="2079" firstAttribute="top" secondItem="2077" secondAttribute="top" constant="11" id="oxN-cO-PL2"/>
             </constraints>
         </customView>
-        <sliderCell controlSize="small" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="right" sliderType="linear" id="2543"/>
+        <sliderCell controlSize="small" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="left" sliderType="linear" id="2543"/>
     </objects>
     <resources>
         <image name="BRMPortalLogo" width="213" height="112"/>

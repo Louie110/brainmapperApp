@@ -108,8 +108,8 @@ for i in `seq 1 9`; do echo 0$i >> labels.txt; done
 for i in `seq 10 35`; do echo $i >> labels.txt; done
 for i in `cat labels.txt`
 do
-${RESPATH}ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
-${RESPATH}ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
+${RESPATH}/ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
+${RESPATH}/ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
 done
 echo "ImageMath completed; starting Atropos"
 echo "50" >> ${UPDATEPATH}

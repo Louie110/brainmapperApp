@@ -13,6 +13,7 @@
 @interface BRM_AppController : NSObject
 {
     IBOutlet NSTextField *textField;
+    IBOutlet NSButton *startButton;
     //IBOutlet NSTableView *mriView;
     //IBOutlet NSTableView *ctView;
     IBOutlet NSPathControl *targetPathCtl;
@@ -49,6 +50,7 @@
 @property (nonatomic) IBOutlet NSPathControl *mriPathCtl, *ctPathCtl;
 @property (strong, nonatomic) IBOutlet NSTextField *threshold;
 //@property (nonatomic) IBOutlet NSSlider *threshSlider;
+@property (strong, nonatomic) IBOutlet NSButtonCell *startButtonText;
 
 //properties related to providing feedback
 @property (strong, nonatomic) IBOutlet NSTextField *textField;

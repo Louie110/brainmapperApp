@@ -19,9 +19,11 @@
 @synthesize inclSegm, textField, targetPathCtl, destPath, resPath, window, ctPathCtl, mriPathCtl;
 @synthesize destPathPopover, checkBoxesPopover, tableViewPopover, progressPopover;
 
-NSString *updateFilePath, *logPath;
+NSString *updateFilePath, *logPath, *dcmPath;
+NSFileManager *fileManager;
 NSString *newTime;
 NSString *Time;
+NSTask *stackingTask;
 int stackingCompleted = 0;
 int programFinished = 0;
 
@@ -40,7 +42,7 @@ int programFinished = 0;
     resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
     NSLog(@"resource path is: %@", resPath);
     NSError *err;
-    NSFileManager *fileManager= [NSFileManager defaultManager];
+    fileManager= [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
     NSLog(@"contents of respath directory:%@",contents);
     
@@ -53,7 +55,7 @@ int programFinished = 0;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [textField setEditable:FALSE];
-
+    [startButton setTitle:@"start"];
     [processInd setStyle:NSProgressIndicatorBarStyle];
     [processInd setIndeterminate:NO];
     
@@ -69,8 +71,11 @@ int programFinished = 0;
     //[threshSlider setMaxValue:3000];
 
     //this might be a good idea
-    [self redirectNSLogToFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"]];
+    //[self redirectNSLogToFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"]];
     NSLog(@"redirectNSLogToFile called");
+    NSError *err;
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
+    NSLog(@"contents of respath directory:%@",contents);
     
     
     //NSImage *bgImage = [[NSImage alloc] initByReferencingFile:@"/Users/VeenaKrish/Desktop/background.png"];
@@ -133,19 +138,17 @@ int programFinished = 0;
 }
 
 
-//good idea to set this on....need to check, though, that stout from the bins in coreg also gets redirected
+//good idea to set this on....need to check, though, that stOut from the bins in coreg also gets redirected
 - (void) redirectNSLogToFile:(NSString*)logPath {
     //logPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"];
     NSLog(@"logPath is: %@", logPath);
     freopen([logPath fileSystemRepresentation], "a+",stderr);
 }
-
 -(void)incrementProgress:(NSNumber*)target {
     double delta = [target doubleValue];
     [processInd setDoubleValue:delta];
     [processInd displayIfNeeded];
     }
-
 -(void)pathControlDoubleClick:(id)sender {
     if ([targetPathCtl clickedPathComponentCell] != nil) {
         [[NSWorkspace sharedWorkspace] openURL:[targetPathCtl URL]];
@@ -211,7 +214,20 @@ int programFinished = 0;
 - (IBAction)start:(id)sender;
 {
     
-    Boolean hasDepth=false;
+    if (![startButton state])
+    //apps running so close it
+    {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(coregScript) object:nil];
+        [startButton setTitle:@"start"];
+        NSLog(@"starButton state != 0");
+        [self cleanUp];
+        
+    }
+    else
+    {
+        // do Start-button action
+       
+    Boolean hasDepth=true;
     NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
     
     //specifying output directory
@@ -222,7 +238,7 @@ int programFinished = 0;
     [self redirectNSLogToFile:logPath];
     
     
-    //creating log file
+    //creating txt update file
     updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt",destPath];
     system([[NSString stringWithFormat:@"echo This is the Update File >> %@", updateFilePath] UTF8String]);
     system([[NSString stringWithFormat:@"echo continuing to Stack DICOMs and convert images >> %@", updateFilePath] UTF8String]);
@@ -240,6 +256,7 @@ int programFinished = 0;
             [self tableViewHelpButtonPushed:self];
             return;
         }
+        
         else if (![_ctPath hasSuffix:@".dcm"]) {
                 [self generateUpdate:@"Please drag one DICOM file from CT into path bar and start again"];
             [tableViewHelpButton setState:1];
@@ -253,16 +270,26 @@ int programFinished = 0;
         }
         
     
+    [startButton setTitle:@"stop"];
     
-    [self stackDicoms:_mriPath forFile:@"mri"];
+        NSArray *dcmArray = [NSArray arrayWithObjects:_mriPath, @"mri", nil];
+        [self performSelectorInBackground:@selector(stackDicoms:) withObject:dcmArray];
+        
+        //[self stackDicoms:_mriPath forFile:@"mri"];
     [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
-    [self stackDicoms:_ctPath forFile:@"ct"];
+        
+        NSArray *dcmArrayct = [NSArray arrayWithObjects:_ctPath, @"ct", nil];
+        [self performSelectorInBackground:@selector(stackDicoms:) withObject:dcmArrayct];
+        
     
     //and if both stackDicomArray calls returned successfully, start coregScript
-    if ( stackingCompleted == 2 ) {
+        while (stackingCompleted != 2);
+    
         [self incrementProgress:[NSNumber numberWithDouble:6.0]];
         [self performSelectorInBackground:@selector(coregScript) withObject:nil];
-        }
+        
+        
+    }
     
 }
 
@@ -307,11 +334,14 @@ int programFinished = 0;
     }
 }
 
-- (void) stackDicoms:(NSString*) inDcm
-                 forFile:(NSString*) inFile
+- (void) stackDicoms:(NSArray*)inputArray
 { //This method converts dicoms to nii's and gzips them. Should output the images:
   // mri.nii.gz and ct.nii.gz into the directory specified at destPath
-
+    
+    NSString* inDcm = [inputArray objectAtIndex:0];
+    NSString* inFile = [inputArray objectAtIndex:1];
+    
+    NSString *dcmPath = [inDcm stringByDeletingLastPathComponent];
 
     NSLog(@"background operations for stackDicomArray...on main? %i", [NSThread isMainThread]);
 
@@ -320,23 +350,27 @@ int programFinished = 0;
     
     system([[NSString stringWithFormat:@"echo Stacking Dicoms, zipped nii files will be located in spcified folder >> %@", updateFilePath] UTF8String]);
     
-    //[self performSelectorOnMainThread:@selector(generateUpdate:) withObject:@"Stacking DICOMS...zipped nii files will be located in specified folder" waitUntilDone:YES];
-    
 
         NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii",resPath]; 
-        NSTask *task = [[NSTask alloc] init];
-        [task setLaunchPath: execPath];
+        stackingTask = [[NSTask alloc] init];
+        [stackingTask setLaunchPath: execPath];
         NSLog(@"exec path is: %@, input arg is %@", execPath, inDcm);
         //[task setArguments:[NSArray arrayWithObject:[arr objectAtIndex:0]]];
-        [task setArguments:[NSArray arrayWithObject:inDcm]];
-        [task launch];
-        [task waitUntilExit];
+        [stackingTask setArguments:[NSArray arrayWithObject:inDcm]];
+        [stackingTask launch];
+    [stackingTask waitUntilExit];
+    
+    
+    
+    NSLog(@"Finished with stacking and can move on:");
+    
+    
     
     NSNumber *prog = [NSNumber numberWithDouble:5.0];
     [self incrementProgress:prog];
         
     //figure out which .nii.gz file is the one we need
-        NSString *dcmPath = [inDcm stringByDeletingLastPathComponent];
+        
         NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
         NSString *nifti;
         NSLog(@"niftis count: %ld", (unsigned long)[niftis count]);
@@ -381,9 +415,9 @@ int programFinished = 0;
         }
     
     
-    
         stackingCompleted++;
-    return;
+    
+    
     
 }
 
@@ -395,7 +429,7 @@ int programFinished = 0;
     //(to do: allow user to set threshold value)
     int thresh = 2000;
     
-    Boolean hasDepth= false;
+    Boolean hasDepth= TRUE;
     //NSString *execPath = [NSString stringWithFormat:@"source %@/coregister2.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (hasDepth), thresh];
     NSString *execPath = [NSString stringWithFormat:@"source %@/Coregistration.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (!hasDepth), thresh];
     NSLog(@"system call: %@",execPath);
@@ -404,12 +438,97 @@ int programFinished = 0;
     NSLog(@"System call returned %d", status);
     
     programFinished = 1;
+    
+    [self cleanUp];
 
 
 }
 
+//Method to terminate execution of tasks if the application is stopped and to delete extraneous files
+- (void) cleanUp {
+    [self incrementProgress:[NSNumber numberWithDouble:100.0]];
+    NSError *deleteErr;
+    NSArray *finalImgs = [fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
+    NSString* fileToDelete;
+    
+    
+    //Case 1: clean up files after application finishes
+    if (programFinished == 1) {
+        [self generateUpdate:@"Coregistration finished! Please find produced images in Final Images folder"];
+        NSLog(@"Deleting all files but the final .nii.gz's");
+        NSString *electrodePath;
+        if (inclSegm)   {
+            NSString *electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.aligned.nii.gz", destPath];
+        } else {
+            NSString *electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode.aligned.nii.gz", destPath];
+        }
+        NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
 
-//possibly rewrite digElectrodes here.....it works as the .sh but it's extremely slow because of all the math....
+        for (NSString* file in finalImgs) {
+            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] ) {
+                continue;
+            }
+            else if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+                NSLog(@"files: %@, %@", electrodePath, brainPath);
+                NSLog(@"Error removing %@: %@", file, deleteErr.localizedDescription);
+            }
+        }
+        
+    } else {
+        
+        NSLog(@"cleanUP called when prgramFinished == 0");
+        //case for dealing with extra niftis in imagePath if the app is stopped before that task is finished:
+        if ([stackingTask isRunning]) {
+            
+            NSLog(@" stackingTask still Running so terminate and delete extra nii's in imagePath..");
+            [stackingTask terminate];
+    
+            NSString *dcmPath_mri = [_mriPath stringByDeletingLastPathComponent];
+            NSString *dcmPath_ct = [_ctPath stringByDeletingLastPathComponent];
+            NSError *err;
+            
+            //delete niis from _mriPath if they exist
+            NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_mri error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+            NSLog(@"Removing niis from dcmPath: %@", dcmPath_mri);
+                if ([niftis count] > 0) {
+                    for (NSString* nii_file in niftis) {
+                        NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file, dcmPath, nii_file);
+                        if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_mri,nii_file] error:&err]) { NSLog(@"Error removing additional niftis"); }
+                    }
+                }
+            //again for _ctPath, if they exist
+            niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_ct error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+            NSLog(@"Removing niis from dcmPath: %@", dcmPath_ct);
+            if ([niftis count] > 0) {
+                for (NSString* nii_file2 in niftis) {
+                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file2, dcmPath_ct, nii_file2);
+                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_ct,nii_file2] error:&err]) { NSLog(@"Error removing additional niftis"); }
+                }
+            }
+            
+        }
+        
+        //And delete all files in the destination folder as well:
+        [self generateUpdate:@"Coregistration process stopped"];
+        NSLog(@"Deleting all files in destination folder");
+        for (NSString* file in finalImgs) {
+            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+            //if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+            //    NSLog(@"Error removing all files"); }
+            
+        }
+        
+        
+    }
+
+    
+    //}
+    
+    
+    return;
+    
+}
 
                        
                 
