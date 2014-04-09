@@ -214,12 +214,6 @@ int programFinished = 0;
 - (IBAction)start:(id)sender;
 {
     
-    //***DEBUGGING************
-    programFinished = 1;
-    NSLog(@"programFinished; calling cleanUp");
-    destPath = [[targetPathCtl URL] path];
-    [self cleanUp];
-    return;
     
     if (![startButton state])
     //apps running so close it
@@ -475,7 +469,7 @@ int programFinished = 0;
 
 //Method to terminate execution of tasks if the application is stopped and to delete extraneous files
 - (void) cleanUp {
-    [self incrementProgress:[NSNumber numberWithDouble:60.0]];
+    [self incrementProgress:[NSNumber numberWithDouble:100.0]];
     NSError *deleteErr;
     
     NSArray *finalImgs = [fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
@@ -490,17 +484,18 @@ int programFinished = 0;
         NSString *electrodePath;
         if (!inclSegm)   {
             NSLog(@"inclSegm");
-            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.aligned.nii.gz", destPath];
+            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
         } else {
-            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_aligned.nii.gz", destPath];
+            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
         }
         NSLog(@"electrodePath is %@", electrodePath);
         NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
-
+        NSString *nslogPath = [NSString stringWithFormat:@"%@/NSLogConsole.txt", destPath];
+        
         for (NSString* file in finalImgs) {
             fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
             NSLog(@"fileToDelete is %@", fileToDelete);
-            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] ) {
+            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] | [fileToDelete isEqualToString:nslogPath] ) {
                 continue;
             }
             else if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {

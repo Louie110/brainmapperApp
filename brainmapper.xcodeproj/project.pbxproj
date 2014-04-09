@@ -221,6 +221,11 @@
 				CLASSPREFIX = BRM;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "University of Pennsylvania";
+				TargetAttributes = {
+					C8CDF369164809AA00BC4F9C = {
+						DevelopmentTeam = 5GS9BDM7WS;
+					};
+				};
 			};
 			buildConfigurationList = C8CDF364164809AA00BC4F9C /* Build configuration list for PBXProject "brainmapper" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -368,6 +373,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "brainmapper/brainmapper-Prefix.pch";
@@ -381,6 +387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "brainmapper/brainmapper-Prefix.pch";
