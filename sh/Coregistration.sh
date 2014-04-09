@@ -184,14 +184,11 @@ c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o el
 fi
 
 #digElectrodes:
-if [ $UNBURY == 1 ]; then
+#always call Unburying.sh:
 echo "unburying electrodes" >> ${UPDATEPATH}
 chmod 755 ${RESPATH}/Unburying.sh
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
-unburied="unburied_"
-else
-unburied=""
-fi
+
 
 
 echo "95" >> ${UPDATEPATH}

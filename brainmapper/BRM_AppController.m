@@ -214,6 +214,13 @@ int programFinished = 0;
 - (IBAction)start:(id)sender;
 {
     
+    //***DEBUGGING************
+    programFinished = 1;
+    NSLog(@"programFinished; calling cleanUp");
+    destPath = [[targetPathCtl URL] path];
+    [self cleanUp];
+    return;
+    
     if (![startButton state])
     //apps running so close it
     {
@@ -227,7 +234,7 @@ int programFinished = 0;
     {
         // do Start-button action
        
-    Boolean hasDepth=true;
+    Boolean hasDepth=false;
     NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
     
     //specifying output directory
@@ -272,21 +279,27 @@ int programFinished = 0;
     
     [startButton setTitle:@"stop"];
     
-        NSArray *dcmArray = [NSArray arrayWithObjects:_mriPath, @"mri", nil];
-        [self performSelectorInBackground:@selector(stackDicoms:) withObject:dcmArray];
         
-        //[self stackDicoms:_mriPath forFile:@"mri"];
-    [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
+        
+        
+        NSThread *operationThread = [NSThread currentThread];
+        //[operationThread setThreadPriority:0.4];
+        
+        NSArray *dcmArray = [NSArray arrayWithObjects:_mriPath, @"mri", nil];
+        [self performSelector:@selector(stackDicoms:) onThread:operationThread withObject:dcmArray waitUntilDone:YES];
+        [self performSelector:@selector(cleanUpNiftis:) onThread:operationThread withObject:dcmArray waitUntilDone:YES];
+        
+        
+        
+        [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
         
         NSArray *dcmArrayct = [NSArray arrayWithObjects:_ctPath, @"ct", nil];
-        [self performSelectorInBackground:@selector(stackDicoms:) withObject:dcmArrayct];
+        [self performSelector:@selector(stackDicoms:) onThread:operationThread withObject:dcmArrayct waitUntilDone:YES];
+        [self performSelector:@selector(cleanUpNiftis:) onThread:operationThread withObject:dcmArrayct waitUntilDone:YES];
         
-    
-    //and if both stackDicomArray calls returned successfully, start coregScript
-        while (stackingCompleted != 2);
-    
+        if (stackingCompleted == 2) {
         [self incrementProgress:[NSNumber numberWithDouble:6.0]];
-        [self performSelectorInBackground:@selector(coregScript) withObject:nil];
+        [self performSelector:@selector(coregScript) onThread:operationThread withObject:nil waitUntilDone:YES]; }
         
         
     }
@@ -345,32 +358,49 @@ int programFinished = 0;
 
     NSLog(@"background operations for stackDicomArray...on main? %i", [NSThread isMainThread]);
 
-    NSError *err;
-    NSFileManager *fileManager= [[NSFileManager alloc] init];
+//    NSError *err;
+//    *NSFileManager *fileManager= [[NSFileManager alloc] init];
     
     system([[NSString stringWithFormat:@"echo Stacking Dicoms, zipped nii files will be located in spcified folder >> %@", updateFilePath] UTF8String]);
     
 
-        NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii",resPath]; 
+        NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii",resPath];
         stackingTask = [[NSTask alloc] init];
         [stackingTask setLaunchPath: execPath];
         NSLog(@"exec path is: %@, input arg is %@", execPath, inDcm);
         //[task setArguments:[NSArray arrayWithObject:[arr objectAtIndex:0]]];
         [stackingTask setArguments:[NSArray arrayWithObject:inDcm]];
         [stackingTask launch];
-    [stackingTask waitUntilExit];
+        [stackingTask waitUntilExit]; //******* <-- This freezes the ui until the dicoms have been made
     
+    
+    
+    
+    //NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii %@",resPath, inDcm];
+    //const char* arg = [execPath cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    //int status = system(arg);
+    //NSLog(@"System call returned %d", status);
+
     
     
     NSLog(@"Finished with stacking and can move on:");
     
     
+}
+
+
+-(void)cleanUpNiftis:(NSArray*)inputArray {
+    NSLog(@"CleanUPNiftis called");
+    NSString* inDcm = [inputArray objectAtIndex:0];
+    NSString* inFile = [inputArray objectAtIndex:1];
+    
+    NSString *dcmPath = [inDcm stringByDeletingLastPathComponent];
     
     NSNumber *prog = [NSNumber numberWithDouble:5.0];
     [self incrementProgress:prog];
         
     //figure out which .nii.gz file is the one we need
-        
+    NSError *err;
         NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
         NSString *nifti;
         NSLog(@"niftis count: %ld", (unsigned long)[niftis count]);
@@ -418,7 +448,6 @@ int programFinished = 0;
         stackingCompleted++;
     
     
-    
 }
 
 
@@ -446,26 +475,31 @@ int programFinished = 0;
 
 //Method to terminate execution of tasks if the application is stopped and to delete extraneous files
 - (void) cleanUp {
-    [self incrementProgress:[NSNumber numberWithDouble:100.0]];
+    [self incrementProgress:[NSNumber numberWithDouble:60.0]];
     NSError *deleteErr;
+    
     NSArray *finalImgs = [fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
     NSString* fileToDelete;
-    
+    NSLog(@"did it get here?");
     
     //Case 1: clean up files after application finishes
     if (programFinished == 1) {
+        NSLog(@"programFinished in cleanUp: gonna delete files");
         [self generateUpdate:@"Coregistration finished! Please find produced images in Final Images folder"];
         NSLog(@"Deleting all files but the final .nii.gz's");
         NSString *electrodePath;
-        if (inclSegm)   {
-            NSString *electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.aligned.nii.gz", destPath];
+        if (!inclSegm)   {
+            NSLog(@"inclSegm");
+            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.aligned.nii.gz", destPath];
         } else {
-            NSString *electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode.aligned.nii.gz", destPath];
+            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_aligned.nii.gz", destPath];
         }
+        NSLog(@"electrodePath is %@", electrodePath);
         NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
 
         for (NSString* file in finalImgs) {
             fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+            NSLog(@"fileToDelete is %@", fileToDelete);
             if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] ) {
                 continue;
             }

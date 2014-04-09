@@ -105,7 +105,7 @@ eCOMz=${eCOMS[2]}
 startValue=$( c3d bImg.img -probe ${eCOMx}x${eCOMy}x${eCOMz}mm | awk '{ print substr($0,length,1) }' )
 echo $startValue >> startValues
 if [[ $startValue -eq 0 ]]; then
-echo Artifact found!!
+echo Artifact found outside brain
 continue
 fi 
 

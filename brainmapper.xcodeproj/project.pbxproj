@@ -11,7 +11,6 @@
 		09452C5016CC6CF7003A3007 /* Atropos in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4A16CC6CF7003A3007 /* Atropos */; };
 		09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */; };
 		09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */; };
-		09452C5316CC6CF7003A3007 /* ThresholdImage in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4D16CC6CF7003A3007 /* ThresholdImage */; };
 		09452C5416CC6CF7003A3007 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4E16CC6CF7003A3007 /* ImageMath */; };
 		09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09452C5516CC6D07003A3007 /* antsIntroduction.sh */; };
 		0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */; };
@@ -42,7 +41,6 @@
 		09452C4A16CC6CF7003A3007 /* Atropos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Atropos; sourceTree = "<group>"; };
 		09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = MeasureImageSimilarity; sourceTree = "<group>"; };
 		09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = WarpImageMultiTransform; sourceTree = "<group>"; };
-		09452C4D16CC6CF7003A3007 /* ThresholdImage */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ThresholdImage; sourceTree = "<group>"; };
 		09452C4E16CC6CF7003A3007 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
 		09452C5516CC6D07003A3007 /* antsIntroduction.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = antsIntroduction.sh; sourceTree = "<group>"; };
 		0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1_3tissue.nii.gz; sourceTree = "<group>"; };
@@ -106,7 +104,6 @@
 				09452C4A16CC6CF7003A3007 /* Atropos */,
 				09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */,
 				09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */,
-				09452C4D16CC6CF7003A3007 /* ThresholdImage */,
 				09452C4E16CC6CF7003A3007 /* ImageMath */,
 				095ECDF416CC48DD00BC9058 /* dcm2nii */,
 				095ECDF516CC48DD00BC9058 /* bet2 */,
@@ -266,7 +263,6 @@
 				09452C5016CC6CF7003A3007 /* Atropos in Resources */,
 				09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */,
 				09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */,
-				09452C5316CC6CF7003A3007 /* ThresholdImage in Resources */,
 				09452C5416CC6CF7003A3007 /* ImageMath in Resources */,
 				E12ACA9418D72C61000B5625 /* c3d in Resources */,
 				09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */,
