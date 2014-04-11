@@ -10,11 +10,10 @@
 RESPATH=$1
 IMAGEPATH=$2
 UPDATEPATH=$3
-echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES" >> ${UPDATEPATH}
 SEGMENT=$4
 UNBURY=$5
 THRES=$6
-
+echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES" >> ${UPDATEPATH}
 
 # FSL Configuration (add FSL directory to path)
 FSLDIR=${RESPATH}
@@ -139,56 +138,12 @@ c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_ali
 
 
 echo "90" >> ${UPDATEPATH}
-#makeSpheres...if you unbury, you don't need this separately....
-if [ $UNBURY != 1 ]; then
-#echo "in the no unbury block" >> ${UPDATEPATH}
-#c3d electrode_aligned.nii.gz -connected-components -split -foreach -centroid -endfor >> centroidFile.txt
-#cat centroidFile.txt | sed 's/[^0-9.]/ /g' >> eCenters.txt
-#c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o electrode_aligned.nii.gz
 
-# 1. unload files
-
-c3d ${IMAGEPATH}/electrode_aligned.nii.gz -binarize -o eImg.img
-c3d ${IMAGEPATH}/mri_brain.nii.gz -binarize -o bImg.img
-
-#2. get centroids:
-numCOMPS=$(c3d eImg.img -comp | head -n 1 | sed 's/[^0-9]/ /g')
-echo numCOMPS = $numCOMPS
-
-if [ $numCOMPS -lt 40 ]; then
-c3d eImg.img -connected-components -split -foreach -centroid -endfor | sed -e '/VOX/d' -e 's/[^0-9.-]/ /g' >> eCent.txt #(this gets centroids, in mm's)
-else
-#first figure out how many connected regions there are.
-let "numRepeats = $numCOMPS / 30 + 1"
-#then find centroids in batches of 30 connected regions so you don't run into memory problems
-echo "Locating electrodes for makeSpheres" >> $UPDATEPATH
-rm -f eCent.txt
-for i in `seq 0 $(expr $numRepeats - 2)`; do
-uIn=$(expr 30 \* $i + 1)
-echo $uIn
-uIn2=$(expr $uIn + 29)
-#(for some reason, thresholding from 0 to some uIn2 doesn't seem to work...make sure it starts at 1)
-c3d eImg.img -comp -threshold $uIn $uIn2 1 0 -comp -split -foreach -centroid -endfor >> eCent.txt
-echo finished c3d with uIn: $uIn and uIn2: $uIn2
-done
-uIn=$(expr $uIn + 30)
-uIn2=$numCOMPS
-c3d eImg.img -comp -threshold $uIn $uIn2 1 0 -comp -split -foreach -centroid -endfor >> eCent.txt
-echo finished c3d with uIn: $uIn and numCOMPS: $numCOMPS
-fi
-
-
-cat eCent.txt | sed -e '/VOX/d' -e '/There/d' -e '/Largest/d' -e 's/[^0-9.-]/ /g' >> eCenters.txt #(this gets rid of unneccessary info in the txt file)
-c3d electrode_aligned.nii.gz -scale 0 -landmarks-to-spheres eCenters.txt 2 -o electrode_aligned.nii.gz
-
-fi
-
-#digElectrodes:
 #always call Unburying.sh:
 echo "unburying electrodes" >> ${UPDATEPATH}
 chmod 755 ${RESPATH}/Unburying.sh
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
-
+unburied=unburied_
 
 
 echo "95" >> ${UPDATEPATH}

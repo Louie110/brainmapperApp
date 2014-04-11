@@ -78,8 +78,6 @@ int programFinished = 0;
     NSLog(@"contents of respath directory:%@",contents);
     
     
-    //NSImage *bgImage = [[NSImage alloc] initByReferencingFile:@"/Users/VeenaKrish/Desktop/background.png"];
-    //[window setBackgroundColor:[NSColor colorWithPatternImage:bgImage]];
     
     
 }
@@ -213,7 +211,6 @@ int programFinished = 0;
 
 - (IBAction)start:(id)sender;
 {
-    
     
     if (![startButton state])
     //apps running so close it
@@ -452,7 +449,7 @@ int programFinished = 0;
     //(to do: allow user to set threshold value)
     int thresh = 2000;
     
-    Boolean hasDepth= TRUE;
+    Boolean hasDepth= FALSE;
     //NSString *execPath = [NSString stringWithFormat:@"source %@/coregister2.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (hasDepth), thresh];
     NSString *execPath = [NSString stringWithFormat:@"source %@/Coregistration.sh %@ %@ %@ %i %i %d",resPath, resPath, destPath, updateFilePath, (!inclSegm), (!hasDepth), thresh];
     NSLog(@"system call: %@",execPath);
