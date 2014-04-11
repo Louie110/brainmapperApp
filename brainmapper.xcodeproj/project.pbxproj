@@ -31,7 +31,7 @@
 		C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF37D164809AA00BC4F9C /* Credits.rtf */; };
 		C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF383164809AB00BC4F9C /* MainMenu.xib */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
-		E12ACA9418D72C61000B5625 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E12ACA9318D72C61000B5625 /* c3d */; };
+		E174A7A318F863BE00A32381 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E174A7A218F863BE00A32381 /* c3d */; };
 		E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */; };
 		E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FE217A2C72D00CFB87B /* Coregistration.sh */; };
 /* End PBXBuildFile section */
@@ -68,7 +68,7 @@
 		C8CDF384164809AB00BC4F9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C8E3442A16497EA000A42105 /* BRM_AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_AppController.h; sourceTree = "<group>"; };
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
-		E12ACA9318D72C61000B5625 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = c3d; path = "/Users/VeenaKrish/Documents/LittLab3-Testing/brainmapperApp/brainmapper/bin/c3d"; sourceTree = "<absolute>"; };
+		E174A7A218F863BE00A32381 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
 		E17D2CE917AF9F730082E560 /* Unburying.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Unburying.sh; sourceTree = "<group>"; };
 		E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMPortalLogo.png; sourceTree = "<group>"; };
 		E1E99FE217A2C72D00CFB87B /* Coregistration.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Coregistration.sh; sourceTree = "<group>"; };
@@ -100,6 +100,7 @@
 		09EECA451691256F001FD8C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
+				E174A7A218F863BE00A32381 /* c3d */,
 				09452C4916CC6CF7003A3007 /* ANTS */,
 				09452C4A16CC6CF7003A3007 /* Atropos */,
 				09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */,
@@ -107,7 +108,6 @@
 				09452C4E16CC6CF7003A3007 /* ImageMath */,
 				095ECDF416CC48DD00BC9058 /* dcm2nii */,
 				095ECDF516CC48DD00BC9058 /* bet2 */,
-				E12ACA9318D72C61000B5625 /* c3d */,
 			);
 			name = bin;
 			path = brainmapper/bin;
@@ -269,7 +269,7 @@
 				09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */,
 				09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */,
 				09452C5416CC6CF7003A3007 /* ImageMath in Resources */,
-				E12ACA9418D72C61000B5625 /* c3d in Resources */,
+				E174A7A318F863BE00A32381 /* c3d in Resources */,
 				09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */,
 				E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */,
 			);
