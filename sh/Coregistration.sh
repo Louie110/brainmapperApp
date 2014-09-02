@@ -84,15 +84,14 @@ CT=${IMAGEPATH}/ct.nii.gz # with electrodes
 MRF_smoothness=0.1
 
 # strip the skull in T1
-echo "stripping the skull in T1 in coregister.sh" >> ${UPDATEPATH}
-
+echo "Stripping the skull from the T1 images. This will take about 5 mins." >> ${UPDATEPATH}
 bet2 $T1 ${T1%.nii.gz}_brain -m
 echo "10" >> ${UPDATEPATH}
 
 
 if [ $SEGMENT == 1 ] ; then
 # warp the NIREP template to skull-stripped T1
-echo "warping the NIREP template to skull-stripped T1 (this will take a few hours)" >> ${UPDATEPATH}
+echo "Warping the NIREP template to skull-stripped T1 (this will take a few hours)" >> ${UPDATEPATH}
 antsIntroduction.sh -d 3 -r $template -i ${T1%.nii.gz}_brain.nii.gz -o ${warpOutputPrefix}_ -m 30x90x20 -l $templateLabels
 echo "15" >> ${UPDATEPATH}
 # perform prior-based segmentation on the warped labels (may require more memory)
@@ -115,7 +114,6 @@ echo "50" >> ${UPDATEPATH}
 
 cp $T1 mri.nii.gz
 cp ${T1%.nii.gz}_brain_mask.nii.gz mri_brain_mask.nii.gz
-#${T1%.nii.gz}_brain_mask.nii.gz
 
 Atropos -d 3 -a $T1 -x ${T1%.nii.gz}_brain_mask.nii.gz -i PriorProbabilityImages[35,./label_prob%02d.nii.gz,0.5] -m [${MRF_smoothness},1x1x1] -c [5,0] -p Socrates[0] -o [./NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz]
 echo "70" >> ${UPDATEPATH}
@@ -138,6 +136,7 @@ c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_ali
 
 
 echo "90" >> ${UPDATEPATH}
+
 
 #always call Unburying.sh:
 echo "unburying electrodes" >> ${UPDATEPATH}

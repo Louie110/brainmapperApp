@@ -7,31 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <dispatch/dispatch.h> //need this? idk...
-
 
 @interface BRM_AppController : NSObject
 {
     IBOutlet NSTextField *textField;
     IBOutlet NSButton *startButton;
-    //IBOutlet NSTableView *mriView;
-    //IBOutlet NSTableView *ctView;
+
     IBOutlet NSPathControl *targetPathCtl;
     IBOutlet NSPathControl *ctPathCtl;
     IBOutlet NSPathControl *mriPathCtl;
     IBOutlet NSProgressIndicator *processInd;
-    //IBOutlet NSSlider *threshSlider;
 
     IBOutlet NSButton *destPathHelpButton;
     IBOutlet NSButton *checkBoxesHelpButton;
     IBOutlet NSButton *tableViewHelpButton;
     IBOutlet NSButton *progressHelpButton;
  
-    //NSMutableArray *mriArray;
-    //NSMutableArray *ctArray;
     NSString *destPath;
-    //NSString *ctPath;
-    //NSString *mriPath;
     Boolean inclSegm;
     dispatch_queue_t bgqueue, main;
    
@@ -40,7 +32,6 @@
 
 //properties related to view
 @property (assign) IBOutlet NSWindow *window;
-//@property (copy) NSMutableArray *mriArray, *ctArray;
 @property (readonly) Boolean inclSegm;
 @property (nonatomic) NSView *corner;
 
@@ -49,7 +40,6 @@
 @property (nonatomic) IBOutlet NSPathControl *targetPathCtl;
 @property (nonatomic) IBOutlet NSPathControl *mriPathCtl, *ctPathCtl;
 @property (strong, nonatomic) IBOutlet NSTextField *threshold;
-//@property (nonatomic) IBOutlet NSSlider *threshSlider;
 @property (strong, nonatomic) IBOutlet NSButtonCell *startButtonText;
 
 //properties related to providing feedback
@@ -65,8 +55,6 @@
 - (void)stackDicoms:(NSString*)inDcm forFile:(NSString*)inFile;
 - (void)coregScript;
 - (void)pathControlDoubleClick:(id)sender;
-//- (void)mriPathControlDoubleClick:(id)sender;
-//- (void)ctPathControlDoubleClick:(id)sender;
 
 //Methods & Actions Involved in providing feedback
 - (void)monitorUpdateFile;
@@ -76,9 +64,6 @@
 - (IBAction)checkBoxesHelpButtonPushed:(id)sender;
 - (IBAction)tableViewHelpButtonPushed:(id)sender;
 - (IBAction)progressHelpButtonPushed:(id)sender;
-
-
-
 
 
 @end
