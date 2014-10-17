@@ -51,8 +51,7 @@ int programFinished = 0;
 
 
 //initialize everything that's displayed
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
     [textField setEditable:FALSE];
     [[textField cell] setWraps:TRUE];
     [startButton setTitle:@"start"];
@@ -74,10 +73,8 @@ int programFinished = 0;
     
 }
 
-
-
 // To Redirect NSLog to a text file
-- (void) redirectNSLogToFile:(NSString*)logPath {
+-(void) redirectNSLogToFile:(NSString*)logPath {
     //logPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"];
     NSLog(@"logPath is: %@", logPath);
     freopen([logPath fileSystemRepresentation], "a+",stderr);
@@ -101,8 +98,6 @@ int programFinished = 0;
         NSLog(@"ctPathCtl double click");
     }
 }
-
-
 -(void)generateUpdate:(NSString *)words {
     /*
      Other things tried:
@@ -121,9 +116,7 @@ int programFinished = 0;
     [NSThread sleepForTimeInterval:0.5];
     
 }
-
-- (IBAction)start:(id)sender;
-{
+-(IBAction)start:(id)sender;{
     
     if (![startButton state]) //Close app if it's already running
     {
@@ -132,7 +125,6 @@ int programFinished = 0;
         NSLog(@"starButton state != 0");
         [self incrementProgress:[NSNumber numberWithDouble:0.0]];
         [self cleanUp];
-        
     }
     else
     {
@@ -210,7 +202,6 @@ int programFinished = 0;
         
         // If both previous operations were completed, run coregistration
         if (stackingCompleted == 2) {
-            
             [self incrementProgress:[NSNumber numberWithDouble:10.0]];
             [self performSelectorOnMainThread:@selector(generateUpdate:) withObject:@"Coregistration algorithm is running" waitUntilDone:TRUE];
             system([[NSString stringWithFormat:@"echo Coregistration script is running. Please wait. >> %@", updateFilePath] UTF8String]); //Only this one works...
@@ -222,7 +213,6 @@ int programFinished = 0;
     }
     
 }
-
 -(void) monitorUpdateFile {
     //monitors kernel events (without continuous polling) and reports when changes have been made to a file
     
@@ -265,8 +255,7 @@ int programFinished = 0;
 }
 
 //This method converts dicoms to nifti's and gzips them. It looks through the folder specified by one image and converts all other dicoms in the folder, as per the executable dcm2nii from MRIcron. This should be called in conjunction with the following method: cleanUpNiftis:NSArray
-- (void) stackDicoms:(NSArray*)inputArray
-{
+- (void) stackDicoms:(NSArray*)inputArray {
     NSString* inDcm = [inputArray objectAtIndex:0];
     
     NSLog(@"stack Dicoms called on main thread");
@@ -290,7 +279,6 @@ int programFinished = 0;
     
     
 }
-
 
 //This method deletes all other .nii.gz files produced by the dcm2nii executable called in the previous method: stackDicoms:NSArray. It renames the desired output nii.gz's as mri.nii.gz and ct.nii.gz, and moves them into the directory specified at destPath.
 -(void)cleanUpNiftis:(NSArray*)inputArray {
@@ -348,9 +336,7 @@ int programFinished = 0;
     
 }
 
-
-- (void) coregScript
-{
+- (void) coregScript {
     NSLog(@"coregScript started");
     [self performSelectorOnMainThread:@selector(generateUpdate:) withObject:@"Coregistration algorithm is running" waitUntilDone:TRUE];
     system([[NSString stringWithFormat:@"echo Coregistration algorithm is running. This will take a while. >> %@", updateFilePath] UTF8String]);
@@ -381,86 +367,85 @@ int programFinished = 0;
     
     NSArray *finalImgs = [fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
     NSString* fileToDelete;
-    NSLog(@"did it get here?");
+    NSLog(@"In cleanup");
     
-    //Case 1: clean up files after application finishes
-    if (programFinished == 1) {
-        [self generateUpdate:@"Coregistration process stopped"];
-        [self incrementProgress:[NSNumber numberWithDouble:100.0]];
-        
-        NSLog(@"programFinished in cleanUp: gonna delete files");
-        [self generateUpdate:@"Coregistration finished! Please find produced images in Final Images folder"];
-        NSLog(@"Deleting all files but the final .nii.gz's");
-        NSString *electrodePath;
-        if (!inclSegm)   {
-            NSLog(@"inclSegm");
-            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
-        } else {
-            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
-        }
-        NSLog(@"electrodePath is %@", electrodePath);
-        NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
-        NSString *nslogPath = [NSString stringWithFormat:@"%@/NSLogConsole.txt", destPath];
-        
-        for (NSString* file in finalImgs) {
-            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
-            NSLog(@"fileToDelete is %@", fileToDelete);
-            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] | [fileToDelete isEqualToString:nslogPath] ) {
-                continue;
-            }
-            else if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
-                NSLog(@"files: %@, %@", electrodePath, brainPath);
-                NSLog(@"Error removing %@: %@", file, deleteErr.localizedDescription);
-            }
-        }
-        
-    } else {
-        
-        NSLog(@"cleanUP called when prgramFinished == 0");
-        [self incrementProgress:[NSNumber numberWithDouble:0.0]];
-        [startButton setTitle:@"Start"];
-        //case for dealing with extra niftis in imagePath if the app is stopped before that task is finished:
-        if ([stackingTask isRunning]) {
-            
-            NSLog(@" stackingTask still Running so terminate and delete extra nii's in imagePath..");
-            [stackingTask terminate];
-            
-            NSString *dcmPath_mri = [_mriPath stringByDeletingLastPathComponent];
-            NSString *dcmPath_ct = [_ctPath stringByDeletingLastPathComponent];
-            NSError *err;
-            
-            //delete niis from _mriPath if they exist
-            NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_mri error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
-            NSLog(@"Removing niis from dcmPath: %@", dcmPath_mri);
-            if ([niftis count] > 0) {
-                for (NSString* nii_file in niftis) {
-                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file, dcmPath, nii_file);
-                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_mri,nii_file] error:&err]) { NSLog(@"Error removing additional niftis"); }
-                }
-            }
-            //again for _ctPath, if they exist
-            niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_ct error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
-            NSLog(@"Removing niis from dcmPath: %@", dcmPath_ct);
-            if ([niftis count] > 0) {
-                for (NSString* nii_file2 in niftis) {
-                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file2, dcmPath_ct, nii_file2);
-                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_ct,nii_file2] error:&err]) { NSLog(@"Error removing additional niftis"); }
-                }
-            }
-        }
-        
-        //And delete all files in the destination folder as well:
-        
-        NSLog(@"Deleting all files in destination folder");
-        for (NSString* file in finalImgs) {
-            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
-            //if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
-            //    NSLog(@"Error removing all files"); }
-            
-        }
-        
-        
-    }
+//    //Case 1: clean up files after application finishes
+//    if (programFinished == 1) {
+//        [self generateUpdate:@"Coregistration process stopped"];
+//        [self incrementProgress:[NSNumber numberWithDouble:100.0]];
+//        
+//        NSLog(@"programFinished in cleanUp: gonna delete files");
+//        [self generateUpdate:@"Coregistration finished! Please find produced images in Final Images folder"];
+//        NSLog(@"Deleting all files but the final .nii.gz's");
+//        NSString *electrodePath;
+//        if (!inclSegm)   {
+//            NSLog(@"inclSegm");
+//            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
+//        } else {
+//            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
+//        }
+//        NSLog(@"electrodePath is %@", electrodePath);
+//        NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
+//        NSString *nslogPath = [NSString stringWithFormat:@"%@/NSLogConsole.txt", destPath];
+//        
+//        for (NSString* file in finalImgs) {
+//            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+//            NSLog(@"fileToDelete is %@", fileToDelete);
+//            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] | [fileToDelete isEqualToString:nslogPath] ) {
+//                continue;
+//            }
+//            else if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+//                NSLog(@"files: %@, %@", electrodePath, brainPath);
+//                NSLog(@"Error removing %@: %@", file, deleteErr.localizedDescription);
+//            }
+//        }
+//        
+//    } else {
+//        
+//        NSLog(@"cleanUP called when prgramFinished == 0");
+//        [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+//        [startButton setTitle:@"Start"];
+//        //case for dealing with extra niftis in imagePath if the app is stopped before that task is finished:
+//        if ([stackingTask isRunning]) {
+//            
+//            NSLog(@" stackingTask still Running so terminate and delete extra nii's in imagePath..");
+//            [stackingTask terminate];
+//            
+//            NSString *dcmPath_mri = [_mriPath stringByDeletingLastPathComponent];
+//            NSString *dcmPath_ct = [_ctPath stringByDeletingLastPathComponent];
+//            NSError *err;
+//            
+//            //delete niis from _mriPath if they exist
+//            NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_mri error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+//            NSLog(@"Removing niis from dcmPath: %@", dcmPath_mri);
+//            if ([niftis count] > 0) {
+//                for (NSString* nii_file in niftis) {
+//                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file, dcmPath, nii_file);
+//                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_mri,nii_file] error:&err]) { NSLog(@"Error removing additional niftis"); }
+//                }
+//            }
+//            //again for _ctPath, if they exist
+//            niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_ct error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+//            NSLog(@"Removing niis from dcmPath: %@", dcmPath_ct);
+//            if ([niftis count] > 0) {
+//                for (NSString* nii_file2 in niftis) {
+//                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file2, dcmPath_ct, nii_file2);
+//                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_ct,nii_file2] error:&err]) { NSLog(@"Error removing additional niftis"); }
+//                }
+//            }
+//        }
+//        
+//        //And delete all files in the destination folder as well:
+//        NSLog(@"Deleting all files in destination folder");
+//        for (NSString* file in finalImgs) {
+//            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+//            //if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+//            //    NSLog(@"Error removing all files"); }
+//            
+//        }
+//        
+//        
+//    }
     
     
     //}
@@ -469,6 +454,5 @@ int programFinished = 0;
     return;
     
 }
-
 
 @end

@@ -37,11 +37,11 @@
 	return NSDragOperationNone;
 }
 
-// Work around a bug from 10.2 onwards
-- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
-{
-	return NSDragOperationEvery;
-}
+//// Work around a bug from 10.2 onwards
+//- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+//{
+//	return NSDragOperationEvery;
+//}
 
 // Stop the NSTableView implementation getting in the way
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender

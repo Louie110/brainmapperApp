@@ -10,29 +10,29 @@
 	<string>brainmapper</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>B97ED126-023E-494B-A0DE-33C7E21BD696</key>
+		<key>C4D249C90079553051692634E1C17771A11A71A2</key>
 		<string>https://github.com/ieeg-portal/brainmapperApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>brainmapper.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>B97ED126-023E-494B-A0DE-33C7E21BD696</key>
+		<key>C4D249C90079553051692634E1C17771A11A71A2</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/ieeg-portal/brainmapperApp.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B97ED126-023E-494B-A0DE-33C7E21BD696</string>
+	<string>C4D249C90079553051692634E1C17771A11A71A2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>B97ED126-023E-494B-A0DE-33C7E21BD696</string>
+			<string>C4D249C90079553051692634E1C17771A11A71A2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>brainmapperApp</string>
 		</dict>

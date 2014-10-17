@@ -52,7 +52,8 @@
 
 //Methods & Actions Involved in Coregistration Process
 - (IBAction)start:(id)sender;
-- (void)stackDicoms:(NSString*)inDcm forFile:(NSString*)inFile;
+//- (void)stackDicoms:(NSString*)inDcm forFile:(NSString*)inFile;
+- (void)stackDicoms:(NSString*)inDcm;
 - (void)coregScript;
 - (void)pathControlDoubleClick:(id)sender;
 
@@ -60,10 +61,10 @@
 - (void)monitorUpdateFile;
 - (void)generateUpdate:(NSString *)words;
 - (void)incrementProgress:(NSNumber*)target;
-- (IBAction)destPathHelpButtonPushed:(id)sender;
-- (IBAction)checkBoxesHelpButtonPushed:(id)sender;
-- (IBAction)tableViewHelpButtonPushed:(id)sender;
-- (IBAction)progressHelpButtonPushed:(id)sender;
+//- (IBAction)destPathHelpButtonPushed:(id)sender;
+//- (IBAction)checkBoxesHelpButtonPushed:(id)sender;
+//- (IBAction)tableViewHelpButtonPushed:(id)sender;
+//- (IBAction)progressHelpButtonPushed:(id)sender;
 
 
 @end
