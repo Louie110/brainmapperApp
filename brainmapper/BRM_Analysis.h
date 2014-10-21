@@ -10,16 +10,16 @@
 
 @interface BRM_Analysis : NSObject
 -(void) stackDicoms;
--(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString*)resPath;
+-(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath doSegm:(Boolean) segm;
 -(void) stack: (NSArray*) dcmArray;
 -(void) startAnalysis;
 -(void)cleanUpNiftis:(NSArray*)inputArray;
-- (void) abortCoreg;
-
+-(void) abortCoreg;
+-(void) redirectNSLogToFile:(NSString*)logPath;
+-(void) cleanUp;
 
 
 @property (copy) NSString *destPath, *resPath, *ctPath, *mriPath, *updateFilePath;
-@property NSArray *mriArray, *ctArray;
 @property int status;
 @property NSFileManager *fileManager;
 @property Boolean isAborted;

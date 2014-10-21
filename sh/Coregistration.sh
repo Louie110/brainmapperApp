@@ -91,16 +91,16 @@ echo "10" >> ${UPDATEPATH}
 
 if [ $SEGMENT == 1 ] ; then
 # warp the NIREP template to skull-stripped T1
-echo "Warping the NIREP template to skull-stripped T1 (this will take a few hours)" >> ${UPDATEPATH}
+echo "Warping the NIREP template to skull-stripped T1." >> ${UPDATEPATH}
 antsIntroduction.sh -d 3 -r $template -i ${T1%.nii.gz}_brain.nii.gz -o ${warpOutputPrefix}_ -m 30x90x20 -l $templateLabels
-echo "15" >> ${UPDATEPATH}
+#echo "15" >> ${UPDATEPATH}
 # perform prior-based segmentation on the warped labels (may require more memory)
-echo "performing prior-based segmentation on the warped labels (this will also take a few hours)" >> ${UPDATEPATH}
-echo "35" >> ${UPDATEPATH}
+echo "Performing prior-based segmentation on the warped labels." >> ${UPDATEPATH}
+#echo "35" >> ${UPDATEPATH}
 
 mkdir ${IMAGEPATH}/priorBasedSeg
 cd ${IMAGEPATH}/priorBasedSeg
-echo "create prior based seg directory at ${IMAGEPATH}" >> ${UPDATEPATH}
+echo "Create prior based seg directory at ${IMAGEPATH}" >> ${UPDATEPATH}
 
 for i in `seq 1 9`; do echo 0$i >> labels.txt; done
 for i in `seq 10 35`; do echo $i >> labels.txt; done
@@ -109,14 +109,14 @@ do
 ${RESPATH}/ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
 ${RESPATH}/ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
 done
-echo "ImageMath completed; starting Atropos"
-echo "50" >> ${UPDATEPATH}
+echo "ImageMath completed; starting Atropos."
+#echo "50" >> ${UPDATEPATH}
 
 cp $T1 mri.nii.gz
 cp ${T1%.nii.gz}_brain_mask.nii.gz mri_brain_mask.nii.gz
 
 Atropos -d 3 -a $T1 -x ${T1%.nii.gz}_brain_mask.nii.gz -i PriorProbabilityImages[35,./label_prob%02d.nii.gz,0.5] -m [${MRF_smoothness},1x1x1] -c [5,0] -p Socrates[0] -o [./NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz]
-echo "70" >> ${UPDATEPATH}
+#echo "70" >> ${UPDATEPATH}
 cp NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz ../seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz
 
 cd ..
@@ -126,28 +126,28 @@ fi
 # align CT to T1 and extract the electrodes
 echo "Aligning CT to T1" >> ${UPDATEPATH}
 antsIntroduction.sh -d 3 -r $T1 -i $CT -o ${CT%.nii.gz}_ -t RA -s MI
-echo "80" >> ${UPDATEPATH}
-echo "Finished ANTS and starting c3d" >> ${UPDATEPATH}
+#echo "80" >> ${UPDATEPATH}
+echo "Finished ANTS and starting c3d." >> ${UPDATEPATH}
 
 # extracting electrodes:
-echo "Extracting electrodes with Convert3D" >> ${UPDATEPATH}
+echo "Extracting electrodes with Convert3D." >> ${UPDATEPATH}
 c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_aligned.nii.gz
 
 
 
-echo "90" >> ${UPDATEPATH}
+#echo "90" >> ${UPDATEPATH}
 
 
 #always call Unburying.sh:
-echo "unburying electrodes" >> ${UPDATEPATH}
+echo "Unburying electrodes." >> ${UPDATEPATH}
 chmod 755 ${RESPATH}/Unburying.sh
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
 unburied=unburied_
 
 
-echo "95" >> ${UPDATEPATH}
+#echo "95" >> ${UPDATEPATH}
 # combine electrodes with T1 segmentation
-echo "combining electrodes with T1 segmentation" >> ${UPDATEPATH}
+echo "Combining electrodes with T1 segmentation." >> ${UPDATEPATH}
 if [[ $SEGMENT == 1 ]]; then
 
 c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
@@ -160,7 +160,7 @@ fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
 if [[ $SEGMENT != 1 ]]; then
-echo "did not perform segmentation; combining electrodes with mri" >> ${UPDATEPATH}
+echo "Did not perform segmentation; combining electrodes with mri." >> ${UPDATEPATH}
 c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 #cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 cd ${IMAGEPATH}
@@ -170,7 +170,7 @@ cd ${IMAGEPATH}
 fi
 
 
-echo "100" >> ${UPDATEPATH}
+#echo "100" >> ${UPDATEPATH}
 
 
 

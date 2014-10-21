@@ -15,8 +15,9 @@ NSString* updateFilePath;
 NSTask* coregTask;
 NSMutableArray* tasks;
 Boolean isAborted = false;
+Boolean doSegmentation = false;
 
--(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath
+-(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath doSegm:(Boolean) segm
 {
     self = [super init];
     if (self){
@@ -24,6 +25,7 @@ Boolean isAborted = false;
         [self setCtPath:ct_p];
         [self setDestPath:dstPath];
         [self setResPath:rsPath];
+        doSegmentation = segm;
         _fileManager= [NSFileManager defaultManager];
         updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt",destPath];
         tasks = [[NSMutableArray alloc]init];
@@ -33,9 +35,21 @@ Boolean isAborted = false;
     return self;
 }
 
+// To Redirect NSLog to a text file
+-(void) redirectNSLogToFile:(NSString*)logPath {
+    //logPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"];
+    NSLog(@"logPath is: %@", logPath);
+    freopen([logPath fileSystemRepresentation], "a+",stderr);
+}
+
 - (void) startAnalysis {
     
     // Stack Dicoms
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Starting to Stack DICOMS" forKey:@"message"];
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                        object:nil
+                                                      userInfo:userInfo];
+    
     [self stackDicoms];
     
     // StackDicoms creates two new threads that need to finish before continuing.
@@ -43,10 +57,18 @@ Boolean isAborted = false;
         sleep(1);
     }
 
-    // do Coregistration
-    if (!isAborted){
-        [self coregScript];
-    }
+    // Do Coregistration
+    userInfo = [NSDictionary dictionaryWithObject:@"Starting Coregistration" forKey:@"message"];
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                        object:nil
+                                                      userInfo:userInfo];
+    [self coregScript];
+    
+    userInfo = [NSDictionary dictionaryWithObject:@"Finished Coregistration --> Cleaning up. " forKey:@"message"];
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                            object:nil
+                                                          userInfo:userInfo];
+    [self cleanUp];
     
 }
 
@@ -77,8 +99,6 @@ Boolean isAborted = false;
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(threadExited:) name:NSThreadWillExitNotification
                                               object:myThread1];
-    
-    
     dispatch_async( stackQueue, ^{
         [myThread1 start];
     });
@@ -91,7 +111,6 @@ Boolean isAborted = false;
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(threadExited:) name:NSThreadWillExitNotification
                                               object:myThread2];
-    
     dispatch_async( stackQueue, ^{
         [myThread2 start];
     });
@@ -100,11 +119,8 @@ Boolean isAborted = false;
 - (void) stack: (NSArray*) dcmArray {
     NSTask *stackingTask;
     
-    
     NSLog(@"Number of tasks is: %lu", [tasks count]);
-    
     NSString* inDcm = [dcmArray objectAtIndex:0];
-    
     NSString *execPath = [NSString stringWithFormat:@"%@/dcm2nii", resPath];
     stackingTask = [[NSTask alloc] init];
     [tasks addObject:stackingTask];
@@ -113,7 +129,7 @@ Boolean isAborted = false;
     
     [stackingTask setArguments:[NSArray arrayWithObject:inDcm]];
     [stackingTask launch];
-    [stackingTask waitUntilExit]; //******* <-- This freezes the ui until the dicoms have been made. Can't generate updates during this task, but it shouldn't take that long
+    [stackingTask waitUntilExit];
     [self cleanUpNiftis:dcmArray ];
     [tasks removeObject:stackingTask];
 }
@@ -130,7 +146,9 @@ Boolean isAborted = false;
     NSError *err;
     NSArray *niftis = [[_fileManager contentsOfDirectoryAtPath:dcmPath error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
     NSString *nifti;
+    
     NSLog(@"niftis count: %ld", (unsigned long)[niftis count]);
+    
     if ([niftis count] == 3) {
         nifti = [[niftis filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self BEGINSWITH 'co'"]] objectAtIndex:0]; //(ie, if there's a co, that's what you need)
     } else if ([niftis count] == 2) {
@@ -138,14 +156,13 @@ Boolean isAborted = false;
     } else if ([niftis count] == 1) {
         nifti = [niftis objectAtIndex:0]; //(or just use whatever)
     } else {
-        NSLog(@"error: incorrect number of nifti files"); //If it didn't work, return. The counter 'stackingCompleted' should not increment to 2, so the user will be notified to delete problematic nifti's and try again.
+        NSLog(@"error: incorrect number of nifti files");
         return;
     }
     
     // Move produced nifti file to the specified destination folder
-    NSString *movePath = [NSString stringWithFormat:@"%@/%@.nii.gz",destPath,inFile];
-    NSString *fromPath = [NSString stringWithFormat:@"%@/%@",dcmPath,nifti];
-    NSLog(@"moving .nii.gz files to: %@", movePath);
+    NSString *movePath = [NSString stringWithFormat:@"%@/%@.nii.gz", destPath, inFile];
+    NSString *fromPath = [NSString stringWithFormat:@"%@/%@", dcmPath, nifti];
     
     //Make sure the move doesn't rewrite any existing images. (tacks _1 onto the end of the file if another shares its name)
     if ([_fileManager fileExistsAtPath:movePath]) {
@@ -185,19 +202,102 @@ Boolean isAborted = false;
         coregTask = [[NSTask alloc] init];
         [tasks addObject:coregTask];
         NSString *t = [NSString stringWithFormat:@"%@",shellString];
+        NSString * doSegmStr = (doSegmentation) ? @"True" : @"False";
         [coregTask setLaunchPath: t];
-        [coregTask setArguments: [NSArray arrayWithObjects:execPath, resPath, destPath, updateFilePath, @"false", @"false", @"2000", nil]];
-  
-        
-        
+        [coregTask setArguments: [NSArray arrayWithObjects:execPath, resPath, destPath, updateFilePath, doSegmStr, @"false", @"2000", nil]];
+
         [coregTask launch];
         [coregTask waitUntilExit];
         [tasks removeObject:coregTask];
     }
-    
-    
-
 }
+
+//Method to terminate execution of tasks if the application is stopped and to delete intermediate files at the end
+- (void) cleanUp {
+    
+    NSError *deleteErr;
+    
+    NSArray *finalImgs = [_fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
+    NSString* fileToDelete;
+    NSLog(@"In cleanup");
+    
+    
+    
+    
+    //Case 1: clean up files after application finishes
+    if (!isAborted) {
+
+        NSString *electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
+        NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
+        NSString *nslogPath = [NSString stringWithFormat:@"%@/logFile.txt", destPath];
+
+        for (NSString* file in finalImgs) {
+            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] | [fileToDelete isEqualToString:nslogPath] ) {
+                continue;
+            }
+            else if(![_fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+                NSLog(@"Error removing %@: %@", file, deleteErr.localizedDescription);
+            }
+        }
+    
+        } else {
+    
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Program aborted --> Cleaning up. " forKey:@"message"];
+            [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                                object:nil
+                                                              userInfo:userInfo];
+            
+            NSLog(@"Program aborted --> Cleaning up.");
+            
+//            //case for dealing with extra niftis in imagePath if the app is stopped before that task is finished:
+//            if ([stackingTask isRunning]) {
+//    
+//                NSLog(@" stackingTask still Running so terminate and delete extra nii's in imagePath..");
+//                [stackingTask terminate];
+//    
+//                NSString *dcmPath_mri = [_mriPath stringByDeletingLastPathComponent];
+//                NSString *dcmPath_ct = [_ctPath stringByDeletingLastPathComponent];
+//                NSError *err;
+//    
+//                //delete niis from _mriPath if they exist
+//                NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_mri error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+//                NSLog(@"Removing niis from dcmPath: %@", dcmPath_mri);
+//                if ([niftis count] > 0) {
+//                    for (NSString* nii_file in niftis) {
+//                        NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file, dcmPath, nii_file);
+//                        if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_mri,nii_file] error:&err]) { NSLog(@"Error removing additional niftis"); }
+//                    }
+//                }
+//                //again for _ctPath, if they exist
+//                niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_ct error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
+//                NSLog(@"Removing niis from dcmPath: %@", dcmPath_ct);
+//                if ([niftis count] > 0) {
+//                    for (NSString* nii_file2 in niftis) {
+//                        NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file2, dcmPath_ct, nii_file2);
+//                        if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_ct,nii_file2] error:&err]) { NSLog(@"Error removing additional niftis"); }
+//                    }
+//                }
+//            }
+//    
+//            //And delete all files in the destination folder as well:
+//            NSLog(@"Deleting all files in destination folder");
+//            for (NSString* file in finalImgs) {
+//                fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
+//                //if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
+//                //    NSLog(@"Error removing all files"); }
+//    
+//            }
+//    
+//    
+//        }
+    
+    
+        }
+    return;
+    
+    }
+
 
 
 @end

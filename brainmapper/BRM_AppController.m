@@ -24,7 +24,7 @@ NSString *newTime;
 NSString *Time;
 NSTask *stackingTask;
 int stackingCompleted = 0;
-int programFinished = 0;
+Boolean programFinished = false;
 NSThread* analysisThread;
 BRM_Analysis *analysisObj;
 
@@ -65,12 +65,22 @@ BRM_Analysis *analysisObj;
     [ctPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
     
     //Uncomment below to redirect NSLog to a text file:
-    //[self redirectNSLogToFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"NSLogConsole.txt"]];
     NSError *err;
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
     NSLog(@"contents of respath directory:%@",contents);
     
+
+    
 }
+
+-(void)updateNotiHandler: (NSNotification *) notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *message = (NSString *)[userInfo  objectForKey:@"message"];
+    [textField setStringValue:message];
+    NSLog(message);
+}
+
 
 // To Redirect NSLog to a text file
 -(void) redirectNSLogToFile:(NSString*)logPath {
@@ -97,28 +107,33 @@ BRM_Analysis *analysisObj;
         NSLog(@"ctPathCtl double click");
     }
 }
+
 -(void)generateUpdate:(NSString *)words {
     [textField setStringValue:words];
-    [NSThread sleepForTimeInterval:0.5];
-    
 }
+
 -(IBAction)start:(id)sender;{
     
-    if (![startButton state]) //Close app if it's already running
+    if (![startButton state])
     {
+        // Interupt tasks if user clicks on Stop.
         if (analysisThread) {
             NSLog(@"Aborting Analysis");
             [analysisObj abortCoreg];
         }
-        
-//        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(coregScript) object:nil];
-//        [startButton setTitle:@"start"];
-//        NSLog(@"starButton state != 0");
-//        [self incrementProgress:[NSNumber numberWithDouble:0.0]];
-//        [self cleanUp];
-    }
-    else
+    } else
     {
+        programFinished = false;
+        // Create notification listener
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateNotiHandler:)
+                                                     name:@"update"
+                                                   object:nil];
+
+        // Run Update Deamon for updates from shell-scripts.
+//        [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
+        
+        
         // do Start-button action
         Boolean hasDepth=false;
         NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
@@ -135,53 +150,63 @@ BRM_Analysis *analysisObj;
         NSLog(@"Update File created? %@", updateFilePath);
         
         
+        [self monitorFile:updateFilePath];
+        
+        // Redirect Log To results folder
+        NSString* logFilePath = [NSString stringWithFormat:@"%@/logFile.txt", destPath];
+        [self redirectNSLogToFile:logFilePath];
+      
         //Check if MRI array and CT arrays are empty and if destPath hasn't been changed from /Applications......
         //If so, alert the user and return
         if ([destPath isEqualToString:@"/Applications"]) {
-//            [self generateUpdate:@"Please specify a destination folder for the coregistered images"];
-//            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+            [textField setStringValue:@"Please specify a destination folder for the coregistered images"];
+            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         if (_mriPath == nil) {
             NSLog(@"no mri dcm input");
-//            [self generateUpdate:@"No MRI dicom images detected. Please drag one DICOM from MRI into path bar"];
-//            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+            [textField setStringValue:@"No MRI dicom images detected. Please drag one DICOM from MRI into path bar"];
+            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         if (_ctPath == nil) {
             NSLog(@"no ct dcm input");
-//            [self generateUpdate:@"No CT dicom images detected. Please drag one DICOM from CT into path bar"];
-//            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+            [textField setStringValue:@"No CT dicom images detected. Please drag one DICOM from CT into path bar"];
+            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         if (![_mriPath hasSuffix:@".dcm"]) {
             NSLog(@"mri images not dicom");
-//            [self generateUpdate:@"MRI image is not recognized as a DICOM. Please make sure the image ends in '.dcm'"];
-//            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+            [textField setStringValue:@"Please drag one DICOM file from the MRI folder into path bar and presss Start again"];
+            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         if (![_ctPath hasSuffix:@".dcm"]) {
-//            [self generateUpdate:@"Please drag one DICOM file from CT into path bar and start again"];
-//            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+            [textField setStringValue:@"Please drag one DICOM file from the CT folder into path bar and presss Start again"];
+            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         
         //when running, the title of the button should change to "stop"
-        [startButton setTitle:@"stop"];
+        [startButton setTitle:@"Stop"];
   
         analysisObj = [[BRM_Analysis alloc] initWithMriPath:_mriPath
-                                                                   ctPath:_ctPath
-                                                                 destPath:destPath
-                                                                  resPath:resPath];
+                                                     ctPath:_ctPath
+                                                   destPath:destPath
+                                                    resPath:resPath
+                                                    doSegm:inclSegm];
 
         analysisThread = [[NSThread alloc] initWithTarget:analysisObj
-                                                           selector:@selector(startAnalysis)
-                                                             object: nil];
+                                                 selector:@selector(startAnalysis)
+                                                   object: nil];
+        
+        // Redirect Log for tasks to results folder
+        [analysisObj redirectNSLogToFile:logFilePath];
         
         [[NSNotificationCenter defaultCenter]addObserver:self
                                                 selector:@selector(threadExited:)
@@ -193,6 +218,8 @@ BRM_Analysis *analysisObj;
     }
 }
 
+
+
 - (void)threadExited:(NSNotification *)noti {
     // Done with the analysis... Time to clean up.
     NSLog(@"Analysis finished...");
@@ -200,7 +227,51 @@ BRM_Analysis *analysisObj;
         NSLog(@"Analysis aborted");
     }
     [startButton setTitle:@"Start"];
+    programFinished = true;
+    [self incrementProgress:[NSNumber numberWithDouble:0.0]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+- (void)monitorFile:(NSString*) path {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    int fildes = open([path UTF8String], O_EVTONLY);
+    
+    __block typeof(self) blockSelf = self;
+    __block dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fildes,
+                                                              DISPATCH_VNODE_DELETE | DISPATCH_VNODE_WRITE | DISPATCH_VNODE_EXTEND |
+                                                              DISPATCH_VNODE_ATTRIB | DISPATCH_VNODE_LINK | DISPATCH_VNODE_RENAME |
+                                                              DISPATCH_VNODE_REVOKE, queue);
+    dispatch_source_set_event_handler(source, ^{
+        unsigned long flags = dispatch_source_get_data(source);
+        // NSLog([NSString stringWithFormat:@"%d",flags]);
+        if(flags & (DISPATCH_VNODE_WRITE | DISPATCH_VNODE_DELETE | DISPATCH_VNODE_ATTRIB))
+        {
+            dispatch_source_cancel(source);
+            
+            NSLog(@"Updating Progress in UI");
+            // report the last line of the changed file to another method that will update the gui
+            NSString *fileContents = [NSString stringWithContentsOfFile:updateFilePath encoding:NSUTF8StringEncoding error:nil];
+            NSArray* sameLine =  [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            if (sameLine && [sameLine count]>2){
+                NSString *lastLine = [sameLine objectAtIndex:([sameLine count] -2)];
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:lastLine forKey:@"message"];
+                [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                                    object:nil
+                                                                  userInfo:userInfo];
+            }
+            
+            //
+            // DO WHAT YOU NEED HERE
+            //
+            [blockSelf monitorFile:path];
+        }
+    });
+    dispatch_source_set_cancel_handler(source, ^(void) {
+        close(fildes);
+    });
+    dispatch_resume(source);
+}
+
 
 -(void) monitorUpdateFile {
     //monitors kernel events (without continuous polling) and reports when changes have been made to a file
@@ -211,34 +282,44 @@ BRM_Analysis *analysisObj;
     
     //check for event change every second
     struct timespec timeout;
-    timeout.tv_sec = 1;
+    timeout.tv_sec = 0.5;
     
     struct kevent changeList, eventList; //structures that note kernel events
     EV_SET( &changeList, fildes,
            EVFILT_VNODE,
-           EV_ADD | EV_CLEAR | EV_ERROR,
-           NOTE_DELETE | NOTE_WRITE | NOTE_RENAME | NOTE_EXTEND,
+           EV_ADD | EV_CLEAR ,
+           NOTE_DELETE |  NOTE_WRITE | NOTE_EXTEND | NOTE_ATTRIB | NOTE_LINK | NOTE_RENAME | NOTE_REVOKE,
            0, 0);
     
     while (!programFinished) { //throughout the process
         
         int event_count = kevent(kq, &changeList, 1, &eventList, 1, &timeout);
-        if (event_count) { //if a kernel event has been detected
+       // NSLog([NSString stringWithFormat:@"%d",event_count]);
+        if (event_count >0) { //if a kernel event has been detected
+            
+            NSLog(@".....New Event");
             
             // report the last line of the changed file to another method that will update the gui
             NSString *fileContents = [NSString stringWithContentsOfFile:updateFilePath encoding:NSUTF8StringEncoding error:nil];
-            NSArray* sameLine = [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            NSString *lastLine = [sameLine objectAtIndex:([sameLine count] -2)];
+            NSArray* sameLine =  [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            if (sameLine && [sameLine count]>2){
+               NSString *lastLine = [sameLine objectAtIndex:([sameLine count] -2)];
+               NSDictionary *userInfo = [NSDictionary dictionaryWithObject:lastLine forKey:@"message"];
+               [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
+                                                                    object:nil
+                                                                  userInfo:userInfo];
+            }
             
-            // if you echo numbers to updateFile.txt, it'll incrementProgress instead of generateUpdate
-            if ( [lastLine length] <= 3 ) {
-                NSNumber* target = [[NSNumber alloc] initWithInt:[lastLine intValue]];
-                [self performSelectorOnMainThread:@selector(incrementProgress:) withObject:target waitUntilDone:YES];
-            }
-            else {
-                [self performSelectorOnMainThread:@selector(generateUpdate:) withObject:lastLine waitUntilDone:YES]; //make sure that the method that updates has priority over everything else that's happening
-                
-            }
+            
+//            // if you echo numbers to updateFile.txt, it'll incrementProgress instead of generateUpdate
+//            if ( [lastLine length] <= 3 ) {
+//                NSNumber* target = [[NSNumber alloc] initWithInt:[lastLine intValue]];
+//                [self performSelectorOnMainThread:@selector(incrementProgress:) withObject:target waitUntilDone:YES];
+//            }
+//            else {
+//                [self performSelectorOnMainThread:@selector(generateUpdate:) withObject:lastLine waitUntilDone:YES]; //make sure that the method that updates has priority over everything else that's happening
+//                
+//            }
         }
     }
 }

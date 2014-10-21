@@ -59,7 +59,7 @@
 - (void)monitorUpdateFile;
 - (void)generateUpdate:(NSString *)words;
 - (void)incrementProgress:(NSNumber*)target;
-
+- (void)monitorFile:(NSString*) path;
 
 
 @end
