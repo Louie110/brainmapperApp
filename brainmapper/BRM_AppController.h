@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BRM_Analysis.h"
 
 @interface BRM_AppController : NSObject
 {
@@ -52,19 +53,13 @@
 
 //Methods & Actions Involved in Coregistration Process
 - (IBAction)start:(id)sender;
-//- (void)stackDicoms:(NSString*)inDcm forFile:(NSString*)inFile;
-- (void)stackDicoms:(NSString*)inDcm;
-- (void)coregScript;
 - (void)pathControlDoubleClick:(id)sender;
 
 //Methods & Actions Involved in providing feedback
 - (void)monitorUpdateFile;
 - (void)generateUpdate:(NSString *)words;
 - (void)incrementProgress:(NSNumber*)target;
-//- (IBAction)destPathHelpButtonPushed:(id)sender;
-//- (IBAction)checkBoxesHelpButtonPushed:(id)sender;
-//- (IBAction)tableViewHelpButtonPushed:(id)sender;
-//- (IBAction)progressHelpButtonPushed:(id)sender;
+
 
 
 @end

@@ -32,6 +32,7 @@
 		C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF37D164809AA00BC4F9C /* Credits.rtf */; };
 		C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF383164809AB00BC4F9C /* MainMenu.xib */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
+		C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */ = {isa = PBXBuildFile; fileRef = C8F433F819F54978001A013E /* BRM_Analysis.m */; };
 		E174A7A318F863BE00A32381 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E174A7A218F863BE00A32381 /* c3d */; };
 		E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */; };
 		E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FE217A2C72D00CFB87B /* Coregistration.sh */; };
@@ -70,6 +71,8 @@
 		C8CDF384164809AB00BC4F9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C8E3442A16497EA000A42105 /* BRM_AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_AppController.h; sourceTree = "<group>"; };
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
+		C8F433F719F54978001A013E /* BRM_Analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_Analysis.h; sourceTree = "<group>"; };
+		C8F433F819F54978001A013E /* BRM_Analysis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_Analysis.m; sourceTree = "<group>"; };
 		E174A7A218F863BE00A32381 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
 		E17D2CE917AF9F730082E560 /* Unburying.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Unburying.sh; sourceTree = "<group>"; };
 		E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMPortalLogo.png; sourceTree = "<group>"; };
@@ -177,6 +180,8 @@
 				C82BF0F7165187BF00A9D734 /* BRMDragDropTableView.h */,
 				C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */,
 				C82CDF5919F05E480080BCEC /* Images.xcassets */,
+				C8F433F719F54978001A013E /* BRM_Analysis.h */,
+				C8F433F819F54978001A013E /* BRM_Analysis.m */,
 			);
 			path = brainmapper;
 			sourceTree = "<group>";
@@ -287,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8CDF37B164809AA00BC4F9C /* main.m in Sources */,
+				C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */,
 				C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */,
 				C82BF0F9165187BF00A9D734 /* BRMDragDropTableView.m in Sources */,
 			);

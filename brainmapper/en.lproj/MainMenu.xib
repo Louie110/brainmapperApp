@@ -129,7 +129,7 @@
                                     <rect key="frame" x="17" y="13" width="291" height="20"/>
                                     <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" pathStyle="navigationBar" id="1285">
                                         <font key="font" metaFont="smallSystem"/>
-                                        <url key="url" string="file://localhost/Applications/"/>
+                                        <url key="url" string="file:///Applications/"/>
                                     </pathCell>
                                 </pathControl>
                             </subviews>
@@ -192,7 +192,7 @@
                                     <rect key="frame" x="81" y="76" width="179" height="20"/>
                                     <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" pathStyle="navigationBar" id="aPm-Zg-fVT">
                                         <font key="font" metaFont="smallSystem"/>
-                                        <url key="url" string="file://localhost/Applications/"/>
+                                        <url key="url" string="file:///Users/Joost/Documents/testData/HUP80/dicom_mri/IMG00000.dcm"/>
                                     </pathCell>
                                 </pathControl>
                                 <pathControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bmw-dY-0Ku">
