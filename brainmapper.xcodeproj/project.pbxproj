@@ -23,7 +23,6 @@
 		0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */; };
 		09D857ED18985C6D00665278 /* coregister2.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09D857EC18985C6D00665278 /* coregister2.sh */; };
 		09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */ = {isa = PBXBuildFile; fileRef = E17D2CE917AF9F730082E560 /* Unburying.sh */; };
-		C82BF0F9165187BF00A9D734 /* BRMDragDropTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */; };
 		C82CDF5A19F05E480080BCEC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82CDF5919F05E480080BCEC /* Images.xcassets */; };
 		C873BCC516552C65000E599B /* helpfiles in Resources */ = {isa = PBXBuildFile; fileRef = C873BCC416552C65000E599B /* helpfiles */; };
 		C8CDF36F164809AA00BC4F9C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CDF36E164809AA00BC4F9C /* Cocoa.framework */; };
@@ -31,6 +30,7 @@
 		C8CDF37B164809AA00BC4F9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CDF37A164809AA00BC4F9C /* main.m */; };
 		C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF37D164809AA00BC4F9C /* Credits.rtf */; };
 		C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF383164809AB00BC4F9C /* MainMenu.xib */; };
+		C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
 		C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */ = {isa = PBXBuildFile; fileRef = C8F433F819F54978001A013E /* BRM_Analysis.m */; };
 		E174A7A318F863BE00A32381 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E174A7A218F863BE00A32381 /* c3d */; };
@@ -54,8 +54,6 @@
 		0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template.nii.gz; sourceTree = "<group>"; };
 		0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_InverseWarp.nii.gz; sourceTree = "<group>"; };
 		09D857EC18985C6D00665278 /* coregister2.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = coregister2.sh; sourceTree = "<group>"; };
-		C82BF0F7165187BF00A9D734 /* BRMDragDropTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMDragDropTableView.h; sourceTree = "<group>"; };
-		C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMDragDropTableView.m; sourceTree = "<group>"; };
 		C82CDF5919F05E480080BCEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C873BCC416552C65000E599B /* helpfiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helpfiles; sourceTree = "<group>"; };
 		C8CDF36A164809AA00BC4F9C /* BrainMapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrainMapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +67,7 @@
 		C8CDF37C164809AA00BC4F9C /* brainmapper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "brainmapper-Prefix.pch"; sourceTree = "<group>"; };
 		C8CDF37E164809AA00BC4F9C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		C8CDF384164809AB00BC4F9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMIcon_16x16.png; sourceTree = "<group>"; };
 		C8E3442A16497EA000A42105 /* BRM_AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_AppController.h; sourceTree = "<group>"; };
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
 		C8F433F719F54978001A013E /* BRM_Analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_Analysis.h; sourceTree = "<group>"; };
@@ -177,8 +176,6 @@
 				C8E3442B16497EA000A42105 /* BRM_AppController.m */,
 				C8CDF383164809AB00BC4F9C /* MainMenu.xib */,
 				C8CDF375164809AA00BC4F9C /* Supporting Files */,
-				C82BF0F7165187BF00A9D734 /* BRMDragDropTableView.h */,
-				C82BF0F8165187BF00A9D734 /* BRMDragDropTableView.m */,
 				C82CDF5919F05E480080BCEC /* Images.xcassets */,
 				C8F433F719F54978001A013E /* BRM_Analysis.h */,
 				C8F433F819F54978001A013E /* BRM_Analysis.m */,
@@ -189,6 +186,7 @@
 		C8CDF375164809AA00BC4F9C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */,
 				E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */,
 				C873BCC416552C65000E599B /* helpfiles */,
 				C8CDF376164809AA00BC4F9C /* brainmapper-Info.plist */,
@@ -273,6 +271,7 @@
 				095ECDFE16CC48DD00BC9058 /* bet2 in Resources */,
 				095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */,
 				095ECE0D16CC48E800BC9058 /* init.sh in Resources */,
+				C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */,
 				09452C4F16CC6CF7003A3007 /* ANTS in Resources */,
 				09452C5016CC6CF7003A3007 /* Atropos in Resources */,
 				09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */,
@@ -294,7 +293,6 @@
 				C8CDF37B164809AA00BC4F9C /* main.m in Sources */,
 				C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */,
 				C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */,
-				C82BF0F9165187BF00A9D734 /* BRMDragDropTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,8 +382,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "brainmapper/brainmapper-Prefix.pch";
@@ -401,8 +398,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "brainmapper/brainmapper-Prefix.pch";

@@ -3,7 +3,7 @@
 //  brainmapper
 //
 //  Created by Joost Wagenaar on 11/6/12.
-//  Copyright (c) 2012 University of Pennsylvania. All rights reserved.
+//  Copyright (c) 2014 University of Pennsylvania. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -54,12 +54,14 @@
 //Methods & Actions Involved in Coregistration Process
 - (IBAction)start:(id)sender;
 - (void)pathControlDoubleClick:(id)sender;
+- (BOOL)windowShouldClose:(id)sender;
 
 //Methods & Actions Involved in providing feedback
-- (void)monitorUpdateFile;
 - (void)generateUpdate:(NSString *)words;
 - (void)incrementProgress:(NSNumber*)target;
 - (void)monitorFile:(NSString*) path;
+- (void)threadExited:(NSNotification *)noti;
+
 
 
 @end

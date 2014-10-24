@@ -2,27 +2,82 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <meta name="AppleIcon" content="helpfiles/brainmapper_icon16.png"/>
+        <meta name="AppleIcon" content="BRMIcon_16x16.png"/>
         <meta name="AppleTitle" content="BrainMapper Help"/>
         <meta name="description" content="Coregistering electrode locations with MRI/CT imaging."/>
         <title>BrainMapper Help</title>
     </head>
     <body>
-
-<h1>BrainMapper Help</h1>
-
-<p>BrainMapper uses MRI and CT brain images data to create 3D brain reconstructions showing electrode placement and optional labeled brain regions.</p>
-        <h2> Using BrainMapper </h2>
-        <p>Before beginning, you should have a set of DICOM images from the T1 pre-implant MRI in one folder and a set of DICOMs from a post-implant CT in a separate folder. It is best if each set has >100 images. </p>
-        <p>Drag the folder where you would like to keep the results onto the Target Folder control bar in the BrainMapper program.</p>
-        <p>Specify whether the resulting images should include segmentation (the output will color-code the brain's 35 regions) and whether the study included depth electrodes. If the study only included surface strips, then the images will be further manipulated to allow for greater visiblility of the electrodes.</p>
-        <p>Drag the first DICOM image from each set onto the corresonding bar. </p>
-		<p>Press START</p>
         
-        <h2>BrainMapper Outputs</h2>
-        <p>When finished, BrainMapper generates two files that can be used to generate a 3D reconstructed model of the brain. You will need to use ITK-SNAP to view these files.</p>
-        <p>mri_brain.nii.gz is the base, grayscale image reqquired for viewing the 3D rendering. </p>
-        <p>electrode_seg.nii.gz is the segmentation image required for viewing the electrodes.</p>
-	
+        <h1 align="center">BrainMapper Application Manual</h1>
+        <p align="center">Version 2.5</p>
+        <p align="center"> (c)2014, University of Pennsylvania </p>
+        
+        
+        <p> The BRAINMAPPER application provides a user-friendly interface to create 3D reconstructions of subdural electrodes on a parcellated brain with rich cortical annotation. This software is distributed under the General Public License (http://opensource.org/licenses/gpl-3.0.html). </p>
+        </p>
+        <p> Allan A. Azarion*, Jue Wu*, Kathryn A. Davis, Allison Pearce, Veena T. Krish, Joost B. Wagenaar, Weixuan Chen, Yuanjie Zheng, Hongzhi Wang, Timothy H. Lucas, Brian Litt** and James C. Gee**, An open-source automated platform for three-dimensional visualization of subdural electrodes using CT-MRI coregistration, Epilepsia, 2014, in press. *co-first authors, **co-senior authors.
+        </p>
+        
+        <p> Screenshots of the 3D coregistered images using ITK-SNAP should include a citation to the following publication:
+        </p>
+        <p> Paul A. Yushkevich, Joseph Piven, Heather C. Hazlett, Rachel G. Smith, Sean Ho, James C. Gee, and
+        Guido Gerig. User-guided 3D active contour segmentation of anatomical structures: Significantly
+        improved efficiency and reliability. Neuroimage 2006 Jul 1;31(3):1116-28.
+        </p>
+        
+        <p> This package contains many components of open source, freely available software included for the ease of use and installation. They are provided subject to the terms of their licenses. For more information about individual components. please see the documentation or visit the original developers’ websites below.
+        </p>
+        
+        <p>ANTs Home Page: http://www.picsl.upenn.edu/ANTS/</p>
+        <p>FSL License: http://www.fmrib.ox.ac.uk/fsl/fsl/licence.html</p>
+        <p>FSL Home Page: http://www.fmrib.ox.ac.uk/fsl/index.html</p>
+        <p>ITK-SNAP General Public License: http://www.gnu.org/licenses/gpl-3.0.txt</p>
+        <p>ITK-SNAP Home Page: http://www.itksnap.org/pmwiki/pmwiki.php</p>
+        <p>MRIcron License: http://www.mccauslandcenter.sc.edu/mricro/mricron/install.html</p>
+        <p>MRIcron dcm2nii Home Page: http://www.mccauslandcenter.sc.edu/mricro/mricron/dcm2nii.html</p>
+        
+        <p>The BrainMapper application is constantly being updated. Please visit the International Epilepsy and Electrophysiology Portal (https://www.ieeg.org/?q=node/31) to download the latest version.
+        </p>
+        
+        <h2> Obtaining DICOM images</h2>
+        <p>Images from the post-implant CT and either the T1 pre-implant MRI or T1 post-implant MRI are to be loaded into the application in DICOM (.dcm) format. You may need a DICOM viewer such as Osirix (http://www.osirix-viewer.com/) to extract the images from a disk to your computer and export them as DICOMs. If you have multiple studies for the same patient, using the one with the most images will produce the highest resolution reconstruction.
+        </p>
+        
+        <h3> Starting the application </h3>
+        <p>
+        <ol>
+            <li>Select your preferred destination folder for the final images by double-clicking on the bar in the first box and dragging your created folder onto the bar.</li>
+            <li>If you would like a labeled, segmented image, click the Segmentation box. This will output the parecellated brain with different colors that are approximate boundaries of functional anatomy.</li>
+            <li>Load your images by dragging one DICOM image of each type (make sure all images of each type are in the same folder) onto the bar in the third box. The application will search through the parent folders of each uploaded image such that all images are obtained.  Make sure that all images of each type are in the same folder with no other files, and that the CT and MRI images are in separate folders.</li>
+            <li>Click START to run.  The running time is approximately 20 minutes for CT-MR coregistration (monochrome brain, without segmentation), and approximately 3 hours for brain parcellation.</li>
+            <li>The final images will appear in the destination folder as the following: mri_brain.nii.gz and electrode_aligned.nii.gz</li>
+        </ol>
+        </p>
+        
+        <h3>Viewing the reconstructed images</h3>
+        <p>You will need to load the produced nifti images into a 3D Viewer, such as ITK-SNAP (http://www.itksnap.org/pmwiki/pmwiki.php). </p>
+        <p>To load images into the ITK-SNAP 3.0: </p>
+        <p>
+        <ol>
+            <li>After opening the ITK-SNAP gui, load the brain image by going to File →”Open Greyscale Image” and selecting the output file mri_brain.nii.gz.</li>
+            <li>Load the electrode placement image by going to ”Segmentation” →”Open Segmentation” and selecting the output file electrode_aligned.nii.gz. The image file format must be selected as NiFTI.</li>
+            <li> Load the cortical labels for parcellated images by going to "Segmentation" → "Import Label Descriptions" and selecting the output file Cortical_Lables.txt (downloaded with the
+                BrainMapper application).</li>
+        </ol>
+        </p>
+        
+        <h3>Using ITK-SNAP to view the images</h3>
+        <p>Once the images are loaded, you will need to update the 3D image by clicking on ”Update Mesh” at the bottom-left corner of the blank quarter-window (The other 3 quarter-windows will show 2D slices of the reconstruction).</p>
+        <p>Other useful tools to view the reconstructed images are the following:
+        <ul>
+            <li>Label Editor: This tool will allow you to adjust the color of the electrodes and the opacity of the brain surface. </li>
+            <li>Crosshairs: This tool allows for navigation through the 2D windows. Actions can be linked across multiple ITK-SNAP windows. </li>
+        </ul>
+        </p>
+        
+        <h3>Contact email for troubleshooting</h3>
+        <p>ieegportal@gmail.com</p>
+        
     </body>
 </html>

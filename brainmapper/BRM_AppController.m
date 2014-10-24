@@ -43,6 +43,7 @@ BRM_Analysis *analysisObj;
     resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
     NSLog(@"resource path is: %@", resPath);
     NSError *err;
+    inclSegm = true;
     fileManager= [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
     NSLog(@"contents of respath directory:%@",contents);
@@ -78,7 +79,6 @@ BRM_Analysis *analysisObj;
     NSDictionary *userInfo = notification.userInfo;
     NSString *message = (NSString *)[userInfo  objectForKey:@"message"];
     [textField setStringValue:message];
-    NSLog(message);
 }
 
 
@@ -130,10 +130,6 @@ BRM_Analysis *analysisObj;
                                                      name:@"update"
                                                    object:nil];
 
-        // Run Update Deamon for updates from shell-scripts.
-//        [self performSelectorInBackground:@selector(monitorUpdateFile) withObject:nil];
-        
-        
         // do Start-button action
         Boolean hasDepth=false;
         NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
@@ -243,12 +239,10 @@ BRM_Analysis *analysisObj;
                                                               DISPATCH_VNODE_REVOKE, queue);
     dispatch_source_set_event_handler(source, ^{
         unsigned long flags = dispatch_source_get_data(source);
-        // NSLog([NSString stringWithFormat:@"%d",flags]);
         if(flags & (DISPATCH_VNODE_WRITE | DISPATCH_VNODE_DELETE | DISPATCH_VNODE_ATTRIB))
         {
             dispatch_source_cancel(source);
             
-            NSLog(@"Updating Progress in UI");
             // report the last line of the changed file to another method that will update the gui
             NSString *fileContents = [NSString stringWithContentsOfFile:updateFilePath encoding:NSUTF8StringEncoding error:nil];
             NSArray* sameLine =  [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
@@ -260,9 +254,6 @@ BRM_Analysis *analysisObj;
                                                                   userInfo:userInfo];
             }
             
-            //
-            // DO WHAT YOU NEED HERE
-            //
             [blockSelf monitorFile:path];
         }
     });
@@ -272,153 +263,11 @@ BRM_Analysis *analysisObj;
     dispatch_resume(source);
 }
 
-
--(void) monitorUpdateFile {
-    //monitors kernel events (without continuous polling) and reports when changes have been made to a file
-    
-    //set up kernel queue and get filedes of updateFile.txt
-    int kq = kqueue();
-    int fildes = [[NSFileHandle fileHandleForReadingAtPath:updateFilePath] fileDescriptor];
-    
-    //check for event change every second
-    struct timespec timeout;
-    timeout.tv_sec = 0.5;
-    
-    struct kevent changeList, eventList; //structures that note kernel events
-    EV_SET( &changeList, fildes,
-           EVFILT_VNODE,
-           EV_ADD | EV_CLEAR ,
-           NOTE_DELETE |  NOTE_WRITE | NOTE_EXTEND | NOTE_ATTRIB | NOTE_LINK | NOTE_RENAME | NOTE_REVOKE,
-           0, 0);
-    
-    while (!programFinished) { //throughout the process
-        
-        int event_count = kevent(kq, &changeList, 1, &eventList, 1, &timeout);
-       // NSLog([NSString stringWithFormat:@"%d",event_count]);
-        if (event_count >0) { //if a kernel event has been detected
-            
-            NSLog(@".....New Event");
-            
-            // report the last line of the changed file to another method that will update the gui
-            NSString *fileContents = [NSString stringWithContentsOfFile:updateFilePath encoding:NSUTF8StringEncoding error:nil];
-            NSArray* sameLine =  [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            if (sameLine && [sameLine count]>2){
-               NSString *lastLine = [sameLine objectAtIndex:([sameLine count] -2)];
-               NSDictionary *userInfo = [NSDictionary dictionaryWithObject:lastLine forKey:@"message"];
-               [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
-                                                                    object:nil
-                                                                  userInfo:userInfo];
-            }
-            
-            
-//            // if you echo numbers to updateFile.txt, it'll incrementProgress instead of generateUpdate
-//            if ( [lastLine length] <= 3 ) {
-//                NSNumber* target = [[NSNumber alloc] initWithInt:[lastLine intValue]];
-//                [self performSelectorOnMainThread:@selector(incrementProgress:) withObject:target waitUntilDone:YES];
-//            }
-//            else {
-//                [self performSelectorOnMainThread:@selector(generateUpdate:) withObject:lastLine waitUntilDone:YES]; //make sure that the method that updates has priority over everything else that's happening
-//                
-//            }
-        }
-    }
+- (BOOL)windowShouldClose:(id)sender {
+    NSLog(@"Closing window");
+    [analysisObj abortCoreg];
+    [NSApp terminate:self];
+    return true;
 }
-
-
-
-////Method to terminate execution of tasks if the application is stopped and to delete intermediate files at the end
-//- (void) cleanUp {
-//    
-//    NSError *deleteErr;
-//    
-//    NSArray *finalImgs = [fileManager contentsOfDirectoryAtPath:destPath error:&deleteErr];
-//    NSString* fileToDelete;
-//    NSLog(@"In cleanup");
-//    
-////    //Case 1: clean up files after application finishes
-////    if (programFinished == 1) {
-////        [self generateUpdate:@"Coregistration process stopped"];
-////        [self incrementProgress:[NSNumber numberWithDouble:100.0]];
-////        
-////        NSLog(@"programFinished in cleanUp: gonna delete files");
-////        [self generateUpdate:@"Coregistration finished! Please find produced images in Final Images folder"];
-////        NSLog(@"Deleting all files but the final .nii.gz's");
-////        NSString *electrodePath;
-////        if (!inclSegm)   {
-////            NSLog(@"inclSegm");
-////            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
-////        } else {
-////            electrodePath = [NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath];
-////        }
-////        NSLog(@"electrodePath is %@", electrodePath);
-////        NSString *brainPath = [NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath];
-////        NSString *nslogPath = [NSString stringWithFormat:@"%@/NSLogConsole.txt", destPath];
-////        
-////        for (NSString* file in finalImgs) {
-////            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
-////            NSLog(@"fileToDelete is %@", fileToDelete);
-////            if ( [fileToDelete isEqualToString:electrodePath] | [fileToDelete isEqualToString:brainPath] | [fileToDelete isEqualToString:nslogPath] ) {
-////                continue;
-////            }
-////            else if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
-////                NSLog(@"files: %@, %@", electrodePath, brainPath);
-////                NSLog(@"Error removing %@: %@", file, deleteErr.localizedDescription);
-////            }
-////        }
-////        
-////    } else {
-////        
-////        NSLog(@"cleanUP called when prgramFinished == 0");
-////        [self incrementProgress:[NSNumber numberWithDouble:0.0]];
-////        [startButton setTitle:@"Start"];
-////        //case for dealing with extra niftis in imagePath if the app is stopped before that task is finished:
-////        if ([stackingTask isRunning]) {
-////            
-////            NSLog(@" stackingTask still Running so terminate and delete extra nii's in imagePath..");
-////            [stackingTask terminate];
-////            
-////            NSString *dcmPath_mri = [_mriPath stringByDeletingLastPathComponent];
-////            NSString *dcmPath_ct = [_ctPath stringByDeletingLastPathComponent];
-////            NSError *err;
-////            
-////            //delete niis from _mriPath if they exist
-////            NSArray *niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_mri error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
-////            NSLog(@"Removing niis from dcmPath: %@", dcmPath_mri);
-////            if ([niftis count] > 0) {
-////                for (NSString* nii_file in niftis) {
-////                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file, dcmPath, nii_file);
-////                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_mri,nii_file] error:&err]) { NSLog(@"Error removing additional niftis"); }
-////                }
-////            }
-////            //again for _ctPath, if they exist
-////            niftis = [[fileManager contentsOfDirectoryAtPath:dcmPath_ct error:&err]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.nii.gz'"]];
-////            NSLog(@"Removing niis from dcmPath: %@", dcmPath_ct);
-////            if ([niftis count] > 0) {
-////                for (NSString* nii_file2 in niftis) {
-////                    NSLog(@" nii_file is %@ and fileToDelte is %@/%@", nii_file2, dcmPath_ct, nii_file2);
-////                    if(![fileManager removeItemAtPath:[NSString stringWithFormat:@"%@/%@",dcmPath_ct,nii_file2] error:&err]) { NSLog(@"Error removing additional niftis"); }
-////                }
-////            }
-////        }
-////        
-////        //And delete all files in the destination folder as well:
-////        NSLog(@"Deleting all files in destination folder");
-////        for (NSString* file in finalImgs) {
-////            fileToDelete = [NSString stringWithFormat:@"%@/%@", destPath, file];
-////            //if(![fileManager removeItemAtPath:fileToDelete error:&deleteErr]) {
-////            //    NSLog(@"Error removing all files"); }
-////            
-////        }
-////        
-////        
-////    }
-//    
-//    
-//    //}
-//    
-//    
-//    return;
-//    
-//}
 
 @end

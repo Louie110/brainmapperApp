@@ -13,7 +13,7 @@ UPDATEPATH=$3
 SEGMENT=$4
 UNBURY=$5
 THRES=$6
-echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES" >> ${UPDATEPATH}
+
 
 # FSL Configuration (add FSL directory to path)
 FSLDIR=${RESPATH}
@@ -57,23 +57,31 @@ FSLCONFDIR=$FSLDIR/config
 
 
 if [ -f /usr/local/etc/fslconf/fsl.sh ] ; then
-. /usr/local/etc/fslconf/fsl.sh ;
+  . /usr/local/etc/fslconf/fsl.sh ;
 fi
 
 
 if [ -f /etc/fslconf/fsl.sh ] ; then
-. /etc/fslconf/fsl.sh ;
+  . /etc/fslconf/fsl.sh ;
 fi
 
 
 if [ -f "${HOME}/.fslconf/fsl.sh" ] ; then
-. "${HOME}/.fslconf/fsl.sh" ;
+  . "${HOME}/.fslconf/fsl.sh" ;
 fi
 
 #------------------------------------------------------------
 
 cd ${IMAGEPATH}
-echo working directory is `pwd`
+
+# 0. Setup file logging
+> coregister.log
+exec >  >(tee -a coregister.log)
+exec 2> >(tee -a coregister.log)
+
+echo "COREGISTRATION.SH: Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES"
+echo "Path to executables is $RESPATH, images is $IMAGEPATH, updateFile is $UPDATEPATH. Segment: $SEGMENT. Unbury: $UNBURY. Thres: $THRES" >> ${UPDATEPATH}
+
 T1=${IMAGEPATH}/mri.nii.gz # pre-resection
 template=${RESPATH}/NIREPG1template.nii.gz
 templateLabels=${RESPATH}/NIREPG1template_35labels.nii.gz
@@ -84,93 +92,90 @@ CT=${IMAGEPATH}/ct.nii.gz # with electrodes
 MRF_smoothness=0.1
 
 # strip the skull in T1
-echo "Stripping the skull from the T1 images. This will take about 5 mins." >> ${UPDATEPATH}
+echo "COREGISTRATION.SH: Stripping the skull from the T1 images."
+echo "Stripping the skull from the T1 images." >> ${UPDATEPATH}
 bet2 $T1 ${T1%.nii.gz}_brain -m
-echo "10" >> ${UPDATEPATH}
 
+if [ $SEGMENT ] ; then
+  # warp the NIREP template to skull-stripped T1
+  echo "COREGISTRATION.SH: Warping the NIREP template to skull-stripped T1."
+  echo "Warping the NIREP template to skull-stripped T1." >> ${UPDATEPATH}
+  antsIntroduction.sh -d 3 -r $template -i ${T1%.nii.gz}_brain.nii.gz -o ${warpOutputPrefix}_ -m 30x90x20 -l $templateLabels
 
-if [ $SEGMENT == 1 ] ; then
-# warp the NIREP template to skull-stripped T1
-echo "Warping the NIREP template to skull-stripped T1." >> ${UPDATEPATH}
-antsIntroduction.sh -d 3 -r $template -i ${T1%.nii.gz}_brain.nii.gz -o ${warpOutputPrefix}_ -m 30x90x20 -l $templateLabels
-#echo "15" >> ${UPDATEPATH}
-# perform prior-based segmentation on the warped labels (may require more memory)
-echo "Performing prior-based segmentation on the warped labels." >> ${UPDATEPATH}
-#echo "35" >> ${UPDATEPATH}
+  # perform prior-based segmentation on the warped labels (may require more memory)
+  echo "COREGISTRATION.SH: Performing prior-based segmentation on the warped labels."
+  echo "Performing prior-based segmentation on the warped labels." >> ${UPDATEPATH}
 
-mkdir ${IMAGEPATH}/priorBasedSeg
-cd ${IMAGEPATH}/priorBasedSeg
-echo "Create prior based seg directory at ${IMAGEPATH}" >> ${UPDATEPATH}
+  mkdir ${IMAGEPATH}/priorBasedSeg
+  cd ${IMAGEPATH}/priorBasedSeg
 
-for i in `seq 1 9`; do echo 0$i >> labels.txt; done
-for i in `seq 10 35`; do echo $i >> labels.txt; done
-for i in `cat labels.txt`
-do
-${RESPATH}/ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
-${RESPATH}/ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
-done
-echo "ImageMath completed; starting Atropos."
-#echo "50" >> ${UPDATEPATH}
+  echo "COREGISTRATION.SH: Create prior based seg directory at ${IMAGEPATH}"
+  echo "Create prior based seg directory at ${IMAGEPATH}" >> ${UPDATEPATH}
 
-cp $T1 mri.nii.gz
-cp ${T1%.nii.gz}_brain_mask.nii.gz mri_brain_mask.nii.gz
+  for i in `seq 1 9`; do echo 0$i >> labels.txt; done
+  for i in `seq 10 35`; do echo $i >> labels.txt; done
+  for i in `cat labels.txt`
+  do
+    ${RESPATH}/ThresholdImage 3 ../${warpOutputPrefix}_labeled.nii.gz label${i}.nii.gz $i $i
+    ${RESPATH}/ImageMath 3 label_prob${i}.nii.gz G label${i}.nii.gz 3
+  done
 
-Atropos -d 3 -a $T1 -x ${T1%.nii.gz}_brain_mask.nii.gz -i PriorProbabilityImages[35,./label_prob%02d.nii.gz,0.5] -m [${MRF_smoothness},1x1x1] -c [5,0] -p Socrates[0] -o [./NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz]
-#echo "70" >> ${UPDATEPATH}
-cp NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz ../seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz
+  echo "COREGISTRATION.SH: ImageMath completed; starting Atropos."
+  echo "ImageMath completed; starting Atropos." >> ${UPDATEPATH}
 
-cd ..
+  cp $T1 mri.nii.gz
+  cp ${T1%.nii.gz}_brain_mask.nii.gz mri_brain_mask.nii.gz
+
+  Atropos -d 3 -a $T1 -x ${T1%.nii.gz}_brain_mask.nii.gz -i PriorProbabilityImages[35,./label_prob%02d.nii.gz,0.5] -m [${MRF_smoothness},1x1x1] -c [5,0] -p Socrates[0] -o [./NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz]
+  cp NIREP_seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz ../seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz
+
+  cd ..
 fi
 
-
 # align CT to T1 and extract the electrodes
+echo "COREGISTRATION.SH: Aligning CT to T1"
 echo "Aligning CT to T1" >> ${UPDATEPATH}
 antsIntroduction.sh -d 3 -r $T1 -i $CT -o ${CT%.nii.gz}_ -t RA -s MI
-#echo "80" >> ${UPDATEPATH}
-echo "Finished ANTS and starting c3d." >> ${UPDATEPATH}
+
+#echo "COREGISTRATION.SH: Finished ANTS and starting c3d."
+#echo "Finished ANTS and starting c3d." >> ${UPDATEPATH}
 
 # extracting electrodes:
+echo "COREGISTRATION.SH: Extracting electrodes with Convert3D."
 echo "Extracting electrodes with Convert3D." >> ${UPDATEPATH}
 c3d ${CT%.nii.gz}_deformed.nii.gz -threshold ${THRES} 99999 1 0 -o electrode_aligned.nii.gz
 
-
-
-#echo "90" >> ${UPDATEPATH}
-
-
 #always call Unburying.sh:
+echo "COREGISTRATION.SH: Unburying electrodes."
 echo "Unburying electrodes." >> ${UPDATEPATH}
 chmod 755 ${RESPATH}/Unburying.sh
 ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
-unburied=unburied_
+unburied="unburied_";
 
-
-#echo "95" >> ${UPDATEPATH}
 # combine electrodes with T1 segmentation
+echo "COREGISTRATION.SH: Combining electrodes with T1 segmentation."
 echo "Combining electrodes with T1 segmentation." >> ${UPDATEPATH}
 if [[ $SEGMENT == 1 ]]; then
 
-c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
-cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
-cd ${IMAGEPATH}
-#Open ITK-SNAP in background so nothing freezes...
-#itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
-#$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l segmentedLabels_preResec.txt &
+  c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
+  cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
+  #cd ${IMAGEPATH}
+  #Open ITK-SNAP in background so nothing freezes...
+  #itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
+  #$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l segmentedLabels_preResec.txt &
 fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
 if [[ $SEGMENT != 1 ]]; then
-echo "Did not perform segmentation; combining electrodes with mri." >> ${UPDATEPATH}
-c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
-#cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
-cd ${IMAGEPATH}
-#Open ITK-SNAP in background so nothing freezes...
-#itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
-#$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l unsegmentedLabels.txt &
+  echo "COREGISTRATION.SH: Did not perform segmentation; combining electrodes with mri."
+  echo "Did not perform segmentation; combining electrodes with mri." >> ${UPDATEPATH}
+  c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
+  #cp ${unburied}electrode_seg.nii.gz ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
+  #cd ${IMAGEPATH}
+  #Open ITK-SNAP in background so nothing freezes...
+  #itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP
+  #$itksnap -g $T1 -s ${unburied}electrode_seg.nii.gz -l unsegmentedLabels.txt &
 fi
-
-
-#echo "100" >> ${UPDATEPATH}
 
 
 
