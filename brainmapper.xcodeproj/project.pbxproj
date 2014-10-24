@@ -7,15 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09452C4F16CC6CF7003A3007 /* ANTS in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4916CC6CF7003A3007 /* ANTS */; };
-		09452C5016CC6CF7003A3007 /* Atropos in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4A16CC6CF7003A3007 /* Atropos */; };
-		09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */; };
-		09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */; };
-		09452C5416CC6CF7003A3007 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = 09452C4E16CC6CF7003A3007 /* ImageMath */; };
 		09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09452C5516CC6D07003A3007 /* antsIntroduction.sh */; };
 		0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */; };
-		095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF416CC48DD00BC9058 /* dcm2nii */; };
-		095ECDFE16CC48DD00BC9058 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = 095ECDF516CC48DD00BC9058 /* bet2 */; };
 		095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */ = {isa = PBXBuildFile; fileRef = 095ECE0816CC48E800BC9058 /* fslmachtype.sh */; };
 		095ECE0D16CC48E800BC9058 /* init.sh in Resources */ = {isa = PBXBuildFile; fileRef = 095ECE0916CC48E800BC9058 /* init.sh */; };
 		0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */; };
@@ -24,6 +17,15 @@
 		09D857ED18985C6D00665278 /* coregister2.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09D857EC18985C6D00665278 /* coregister2.sh */; };
 		09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */ = {isa = PBXBuildFile; fileRef = E17D2CE917AF9F730082E560 /* Unburying.sh */; };
 		C82CDF5A19F05E480080BCEC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82CDF5919F05E480080BCEC /* Images.xcassets */; };
+		C84E616019FA968000CCC2C2 /* ANTS in Resources */ = {isa = PBXBuildFile; fileRef = C84E615719FA968000CCC2C2 /* ANTS */; };
+		C84E616119FA968000CCC2C2 /* Atropos in Resources */ = {isa = PBXBuildFile; fileRef = C84E615819FA968000CCC2C2 /* Atropos */; };
+		C84E616219FA968000CCC2C2 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = C84E615919FA968000CCC2C2 /* bet2 */; };
+		C84E616319FA968000CCC2C2 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = C84E615A19FA968000CCC2C2 /* c3d */; };
+		C84E616419FA968000CCC2C2 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = C84E615B19FA968000CCC2C2 /* dcm2nii */; };
+		C84E616519FA968000CCC2C2 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = C84E615C19FA968000CCC2C2 /* ImageMath */; };
+		C84E616619FA968000CCC2C2 /* MeasureImageSimilarity in Resources */ = {isa = PBXBuildFile; fileRef = C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */; };
+		C84E616719FA968000CCC2C2 /* ThresholdImage in Resources */ = {isa = PBXBuildFile; fileRef = C84E615E19FA968000CCC2C2 /* ThresholdImage */; };
+		C84E616819FA968000CCC2C2 /* WarpImageMultiTransform in Resources */ = {isa = PBXBuildFile; fileRef = C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */; };
 		C873BCC516552C65000E599B /* helpfiles in Resources */ = {isa = PBXBuildFile; fileRef = C873BCC416552C65000E599B /* helpfiles */; };
 		C8CDF36F164809AA00BC4F9C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CDF36E164809AA00BC4F9C /* Cocoa.framework */; };
 		C8CDF379164809AA00BC4F9C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF377164809AA00BC4F9C /* InfoPlist.strings */; };
@@ -33,21 +35,13 @@
 		C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
 		C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */ = {isa = PBXBuildFile; fileRef = C8F433F819F54978001A013E /* BRM_Analysis.m */; };
-		E174A7A318F863BE00A32381 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = E174A7A218F863BE00A32381 /* c3d */; };
 		E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */; };
 		E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FE217A2C72D00CFB87B /* Coregistration.sh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		09452C4916CC6CF7003A3007 /* ANTS */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ANTS; sourceTree = "<group>"; };
-		09452C4A16CC6CF7003A3007 /* Atropos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Atropos; sourceTree = "<group>"; };
-		09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = MeasureImageSimilarity; sourceTree = "<group>"; };
-		09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = WarpImageMultiTransform; sourceTree = "<group>"; };
-		09452C4E16CC6CF7003A3007 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
 		09452C5516CC6D07003A3007 /* antsIntroduction.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = antsIntroduction.sh; sourceTree = "<group>"; };
 		0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1_3tissue.nii.gz; sourceTree = "<group>"; };
-		095ECDF416CC48DD00BC9058 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
-		095ECDF516CC48DD00BC9058 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
 		095ECE0816CC48E800BC9058 /* fslmachtype.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = fslmachtype.sh; sourceTree = "<group>"; };
 		095ECE0916CC48E800BC9058 /* init.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = init.sh; sourceTree = "<group>"; };
 		0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_35labels.nii.gz; sourceTree = "<group>"; };
@@ -55,6 +49,15 @@
 		0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_InverseWarp.nii.gz; sourceTree = "<group>"; };
 		09D857EC18985C6D00665278 /* coregister2.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = coregister2.sh; sourceTree = "<group>"; };
 		C82CDF5919F05E480080BCEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C84E615719FA968000CCC2C2 /* ANTS */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ANTS; sourceTree = "<group>"; };
+		C84E615819FA968000CCC2C2 /* Atropos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Atropos; sourceTree = "<group>"; };
+		C84E615919FA968000CCC2C2 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
+		C84E615A19FA968000CCC2C2 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
+		C84E615B19FA968000CCC2C2 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
+		C84E615C19FA968000CCC2C2 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
+		C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = MeasureImageSimilarity; sourceTree = "<group>"; };
+		C84E615E19FA968000CCC2C2 /* ThresholdImage */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThresholdImage; sourceTree = "<group>"; };
+		C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = WarpImageMultiTransform; sourceTree = "<group>"; };
 		C873BCC416552C65000E599B /* helpfiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helpfiles; sourceTree = "<group>"; };
 		C8CDF36A164809AA00BC4F9C /* BrainMapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrainMapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8CDF36E164809AA00BC4F9C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -72,7 +75,6 @@
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
 		C8F433F719F54978001A013E /* BRM_Analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_Analysis.h; sourceTree = "<group>"; };
 		C8F433F819F54978001A013E /* BRM_Analysis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_Analysis.m; sourceTree = "<group>"; };
-		E174A7A218F863BE00A32381 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
 		E17D2CE917AF9F730082E560 /* Unburying.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Unburying.sh; sourceTree = "<group>"; };
 		E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMPortalLogo.png; sourceTree = "<group>"; };
 		E1E99FE217A2C72D00CFB87B /* Coregistration.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Coregistration.sh; sourceTree = "<group>"; };
@@ -101,22 +103,6 @@
 			path = templates;
 			sourceTree = "<group>";
 		};
-		09EECA451691256F001FD8C7 /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				E174A7A218F863BE00A32381 /* c3d */,
-				09452C4916CC6CF7003A3007 /* ANTS */,
-				09452C4A16CC6CF7003A3007 /* Atropos */,
-				09452C4B16CC6CF7003A3007 /* MeasureImageSimilarity */,
-				09452C4C16CC6CF7003A3007 /* WarpImageMultiTransform */,
-				09452C4E16CC6CF7003A3007 /* ImageMath */,
-				095ECDF416CC48DD00BC9058 /* dcm2nii */,
-				095ECDF516CC48DD00BC9058 /* bet2 */,
-			);
-			name = bin;
-			path = brainmapper/bin;
-			sourceTree = "<group>";
-		};
 		09EECA4F1692860B001FD8C7 /* sh */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,12 +116,28 @@
 			path = sh;
 			sourceTree = "<group>";
 		};
+		C84E615619FA968000CCC2C2 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				C84E615719FA968000CCC2C2 /* ANTS */,
+				C84E615819FA968000CCC2C2 /* Atropos */,
+				C84E615919FA968000CCC2C2 /* bet2 */,
+				C84E615A19FA968000CCC2C2 /* c3d */,
+				C84E615B19FA968000CCC2C2 /* dcm2nii */,
+				C84E615C19FA968000CCC2C2 /* ImageMath */,
+				C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */,
+				C84E615E19FA968000CCC2C2 /* ThresholdImage */,
+				C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
 		C8CDF35F164809AA00BC4F9C = {
 			isa = PBXGroup;
 			children = (
+				C84E615619FA968000CCC2C2 /* bin */,
 				0984704C16CAC06700D50215 /* templates */,
 				09EECA4F1692860B001FD8C7 /* sh */,
-				09EECA451691256F001FD8C7 /* bin */,
 				C8CDF374164809AA00BC4F9C /* brainmapper */,
 				C8CDF36D164809AA00BC4F9C /* Frameworks */,
 				C8CDF36B164809AA00BC4F9C /* Products */,
@@ -255,29 +257,30 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C84E616119FA968000CCC2C2 /* Atropos in Resources */,
 				09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */,
+				C84E616719FA968000CCC2C2 /* ThresholdImage in Resources */,
+				C84E616619FA968000CCC2C2 /* MeasureImageSimilarity in Resources */,
 				09D857ED18985C6D00665278 /* coregister2.sh in Resources */,
 				E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */,
 				C8CDF379164809AA00BC4F9C /* InfoPlist.strings in Resources */,
+				C84E616219FA968000CCC2C2 /* bet2 in Resources */,
 				C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */,
 				C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */,
+				C84E616019FA968000CCC2C2 /* ANTS in Resources */,
+				C84E616819FA968000CCC2C2 /* WarpImageMultiTransform in Resources */,
 				C873BCC516552C65000E599B /* helpfiles in Resources */,
 				0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */,
+				C84E616419FA968000CCC2C2 /* dcm2nii in Resources */,
 				0984705A16CAC0CA00D50215 /* NIREPG1template.nii.gz in Resources */,
+				C84E616319FA968000CCC2C2 /* c3d in Resources */,
 				C82CDF5A19F05E480080BCEC /* Images.xcassets in Resources */,
 				0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */,
-				095ECDFD16CC48DD00BC9058 /* dcm2nii in Resources */,
 				0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */,
-				095ECDFE16CC48DD00BC9058 /* bet2 in Resources */,
 				095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */,
 				095ECE0D16CC48E800BC9058 /* init.sh in Resources */,
+				C84E616519FA968000CCC2C2 /* ImageMath in Resources */,
 				C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */,
-				09452C4F16CC6CF7003A3007 /* ANTS in Resources */,
-				09452C5016CC6CF7003A3007 /* Atropos in Resources */,
-				09452C5116CC6CF7003A3007 /* MeasureImageSimilarity in Resources */,
-				09452C5216CC6CF7003A3007 /* WarpImageMultiTransform in Resources */,
-				09452C5416CC6CF7003A3007 /* ImageMath in Resources */,
-				E174A7A318F863BE00A32381 /* c3d in Resources */,
 				09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */,
 				E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */,
 			);
