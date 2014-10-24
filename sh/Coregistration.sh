@@ -96,7 +96,7 @@ echo "COREGISTRATION.SH: Stripping the skull from the T1 images."
 echo "Stripping the skull from the T1 images." >> ${UPDATEPATH}
 bet2 $T1 ${T1%.nii.gz}_brain -m
 
-if [ $SEGMENT ] ; then
+if [ "$SEGMENT" = "true" ] ; then
   # warp the NIREP template to skull-stripped T1
   echo "COREGISTRATION.SH: Warping the NIREP template to skull-stripped T1."
   echo "Warping the NIREP template to skull-stripped T1." >> ${UPDATEPATH}
@@ -155,7 +155,7 @@ unburied="unburied_";
 # combine electrodes with T1 segmentation
 echo "COREGISTRATION.SH: Combining electrodes with T1 segmentation."
 echo "Combining electrodes with T1 segmentation." >> ${UPDATEPATH}
-if [[ $SEGMENT == 1 ]]; then
+if [ "$SEGMENT" = "true" ]; then
 
   c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
   cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
@@ -166,7 +166,7 @@ if [[ $SEGMENT == 1 ]]; then
 fi
 
 # but if you don't want it segmented, then don't deal with the seg35labels_ files...
-if [[ $SEGMENT != 1 ]]; then
+if [ "$SEGMENT" = "false" ]; then
   echo "COREGISTRATION.SH: Did not perform segmentation; combining electrodes with mri."
   echo "Did not perform segmentation; combining electrodes with mri." >> ${UPDATEPATH}
   c3d ${unburied}electrode_aligned.nii.gz -scale 2 ${IMAGEPATH}/mri_brain_mask.nii.gz -add -clip 0 2 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz

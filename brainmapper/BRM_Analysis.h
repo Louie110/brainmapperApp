@@ -10,7 +10,12 @@
 
 @interface BRM_Analysis : NSObject
 -(void) stackDicoms;
--(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath doSegm:(Boolean) segm;
+-(BRM_Analysis *) initWithMriPath: (NSString *)mri_p
+                           ctPath:(NSString *)ct_p
+                         destPath:(NSString *)dstPath
+                          resPath:(NSString *)rsPath
+                           doSegm:(Boolean) segm
+                        debugMode:(Boolean) dBugMode;
 -(void) stack: (NSArray*) dcmArray;
 -(void) startAnalysis;
 -(void)cleanUpNiftis:(NSArray*)inputArray;

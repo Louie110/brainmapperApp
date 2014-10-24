@@ -16,16 +16,16 @@
 		0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */ = {isa = PBXBuildFile; fileRef = 0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */; };
 		09D857ED18985C6D00665278 /* coregister2.sh in Resources */ = {isa = PBXBuildFile; fileRef = 09D857EC18985C6D00665278 /* coregister2.sh */; };
 		09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */ = {isa = PBXBuildFile; fileRef = E17D2CE917AF9F730082E560 /* Unburying.sh */; };
+		C809ECD119FA9B6700FE2604 /* ANTS in Resources */ = {isa = PBXBuildFile; fileRef = C809ECC819FA9B6700FE2604 /* ANTS */; };
+		C809ECD219FA9B6700FE2604 /* Atropos in Resources */ = {isa = PBXBuildFile; fileRef = C809ECC919FA9B6700FE2604 /* Atropos */; };
+		C809ECD319FA9B6700FE2604 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCA19FA9B6700FE2604 /* bet2 */; };
+		C809ECD419FA9B6700FE2604 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCB19FA9B6700FE2604 /* c3d */; };
+		C809ECD519FA9B6700FE2604 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCC19FA9B6700FE2604 /* dcm2nii */; };
+		C809ECD619FA9B6700FE2604 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCD19FA9B6700FE2604 /* ImageMath */; };
+		C809ECD719FA9B6700FE2604 /* MeasureImageSimilarity in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCE19FA9B6700FE2604 /* MeasureImageSimilarity */; };
+		C809ECD819FA9B6700FE2604 /* ThresholdImage in Resources */ = {isa = PBXBuildFile; fileRef = C809ECCF19FA9B6700FE2604 /* ThresholdImage */; };
+		C809ECD919FA9B6700FE2604 /* WarpImageMultiTransform in Resources */ = {isa = PBXBuildFile; fileRef = C809ECD019FA9B6700FE2604 /* WarpImageMultiTransform */; };
 		C82CDF5A19F05E480080BCEC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C82CDF5919F05E480080BCEC /* Images.xcassets */; };
-		C84E616019FA968000CCC2C2 /* ANTS in Resources */ = {isa = PBXBuildFile; fileRef = C84E615719FA968000CCC2C2 /* ANTS */; };
-		C84E616119FA968000CCC2C2 /* Atropos in Resources */ = {isa = PBXBuildFile; fileRef = C84E615819FA968000CCC2C2 /* Atropos */; };
-		C84E616219FA968000CCC2C2 /* bet2 in Resources */ = {isa = PBXBuildFile; fileRef = C84E615919FA968000CCC2C2 /* bet2 */; };
-		C84E616319FA968000CCC2C2 /* c3d in Resources */ = {isa = PBXBuildFile; fileRef = C84E615A19FA968000CCC2C2 /* c3d */; };
-		C84E616419FA968000CCC2C2 /* dcm2nii in Resources */ = {isa = PBXBuildFile; fileRef = C84E615B19FA968000CCC2C2 /* dcm2nii */; };
-		C84E616519FA968000CCC2C2 /* ImageMath in Resources */ = {isa = PBXBuildFile; fileRef = C84E615C19FA968000CCC2C2 /* ImageMath */; };
-		C84E616619FA968000CCC2C2 /* MeasureImageSimilarity in Resources */ = {isa = PBXBuildFile; fileRef = C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */; };
-		C84E616719FA968000CCC2C2 /* ThresholdImage in Resources */ = {isa = PBXBuildFile; fileRef = C84E615E19FA968000CCC2C2 /* ThresholdImage */; };
-		C84E616819FA968000CCC2C2 /* WarpImageMultiTransform in Resources */ = {isa = PBXBuildFile; fileRef = C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */; };
 		C873BCC516552C65000E599B /* helpfiles in Resources */ = {isa = PBXBuildFile; fileRef = C873BCC416552C65000E599B /* helpfiles */; };
 		C8CDF36F164809AA00BC4F9C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CDF36E164809AA00BC4F9C /* Cocoa.framework */; };
 		C8CDF379164809AA00BC4F9C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF377164809AA00BC4F9C /* InfoPlist.strings */; };
@@ -48,16 +48,16 @@
 		0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template.nii.gz; sourceTree = "<group>"; };
 		0984705816CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = NIREPG1template_InverseWarp.nii.gz; sourceTree = "<group>"; };
 		09D857EC18985C6D00665278 /* coregister2.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = coregister2.sh; sourceTree = "<group>"; };
+		C809ECC819FA9B6700FE2604 /* ANTS */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ANTS; sourceTree = "<group>"; };
+		C809ECC919FA9B6700FE2604 /* Atropos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Atropos; sourceTree = "<group>"; };
+		C809ECCA19FA9B6700FE2604 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
+		C809ECCB19FA9B6700FE2604 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
+		C809ECCC19FA9B6700FE2604 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
+		C809ECCD19FA9B6700FE2604 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
+		C809ECCE19FA9B6700FE2604 /* MeasureImageSimilarity */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = MeasureImageSimilarity; sourceTree = "<group>"; };
+		C809ECCF19FA9B6700FE2604 /* ThresholdImage */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThresholdImage; sourceTree = "<group>"; };
+		C809ECD019FA9B6700FE2604 /* WarpImageMultiTransform */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = WarpImageMultiTransform; sourceTree = "<group>"; };
 		C82CDF5919F05E480080BCEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		C84E615719FA968000CCC2C2 /* ANTS */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ANTS; sourceTree = "<group>"; };
-		C84E615819FA968000CCC2C2 /* Atropos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = Atropos; sourceTree = "<group>"; };
-		C84E615919FA968000CCC2C2 /* bet2 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bet2; sourceTree = "<group>"; };
-		C84E615A19FA968000CCC2C2 /* c3d */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = c3d; sourceTree = "<group>"; };
-		C84E615B19FA968000CCC2C2 /* dcm2nii */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dcm2nii; sourceTree = "<group>"; };
-		C84E615C19FA968000CCC2C2 /* ImageMath */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ImageMath; sourceTree = "<group>"; };
-		C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = MeasureImageSimilarity; sourceTree = "<group>"; };
-		C84E615E19FA968000CCC2C2 /* ThresholdImage */ = {isa = PBXFileReference; lastKnownFileType = file; path = ThresholdImage; sourceTree = "<group>"; };
-		C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = WarpImageMultiTransform; sourceTree = "<group>"; };
 		C873BCC416552C65000E599B /* helpfiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helpfiles; sourceTree = "<group>"; };
 		C8CDF36A164809AA00BC4F9C /* BrainMapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrainMapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8CDF36E164809AA00BC4F9C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -116,18 +116,18 @@
 			path = sh;
 			sourceTree = "<group>";
 		};
-		C84E615619FA968000CCC2C2 /* bin */ = {
+		C809ECC719FA9B6700FE2604 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				C84E615719FA968000CCC2C2 /* ANTS */,
-				C84E615819FA968000CCC2C2 /* Atropos */,
-				C84E615919FA968000CCC2C2 /* bet2 */,
-				C84E615A19FA968000CCC2C2 /* c3d */,
-				C84E615B19FA968000CCC2C2 /* dcm2nii */,
-				C84E615C19FA968000CCC2C2 /* ImageMath */,
-				C84E615D19FA968000CCC2C2 /* MeasureImageSimilarity */,
-				C84E615E19FA968000CCC2C2 /* ThresholdImage */,
-				C84E615F19FA968000CCC2C2 /* WarpImageMultiTransform */,
+				C809ECC819FA9B6700FE2604 /* ANTS */,
+				C809ECC919FA9B6700FE2604 /* Atropos */,
+				C809ECCA19FA9B6700FE2604 /* bet2 */,
+				C809ECCB19FA9B6700FE2604 /* c3d */,
+				C809ECCC19FA9B6700FE2604 /* dcm2nii */,
+				C809ECCD19FA9B6700FE2604 /* ImageMath */,
+				C809ECCE19FA9B6700FE2604 /* MeasureImageSimilarity */,
+				C809ECCF19FA9B6700FE2604 /* ThresholdImage */,
+				C809ECD019FA9B6700FE2604 /* WarpImageMultiTransform */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -135,7 +135,7 @@
 		C8CDF35F164809AA00BC4F9C = {
 			isa = PBXGroup;
 			children = (
-				C84E615619FA968000CCC2C2 /* bin */,
+				C809ECC719FA9B6700FE2604 /* bin */,
 				0984704C16CAC06700D50215 /* templates */,
 				09EECA4F1692860B001FD8C7 /* sh */,
 				C8CDF374164809AA00BC4F9C /* brainmapper */,
@@ -257,29 +257,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C84E616119FA968000CCC2C2 /* Atropos in Resources */,
+				C809ECD219FA9B6700FE2604 /* Atropos in Resources */,
 				09E7531118AC3A0900BE6B18 /* Unburying.sh in Resources */,
-				C84E616719FA968000CCC2C2 /* ThresholdImage in Resources */,
-				C84E616619FA968000CCC2C2 /* MeasureImageSimilarity in Resources */,
+				C809ECD819FA9B6700FE2604 /* ThresholdImage in Resources */,
+				C809ECD719FA9B6700FE2604 /* MeasureImageSimilarity in Resources */,
 				09D857ED18985C6D00665278 /* coregister2.sh in Resources */,
 				E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */,
 				C8CDF379164809AA00BC4F9C /* InfoPlist.strings in Resources */,
-				C84E616219FA968000CCC2C2 /* bet2 in Resources */,
+				C809ECD319FA9B6700FE2604 /* bet2 in Resources */,
 				C8CDF37F164809AA00BC4F9C /* Credits.rtf in Resources */,
 				C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */,
-				C84E616019FA968000CCC2C2 /* ANTS in Resources */,
-				C84E616819FA968000CCC2C2 /* WarpImageMultiTransform in Resources */,
+				C809ECD119FA9B6700FE2604 /* ANTS in Resources */,
+				C809ECD919FA9B6700FE2604 /* WarpImageMultiTransform in Resources */,
 				C873BCC516552C65000E599B /* helpfiles in Resources */,
 				0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */,
-				C84E616419FA968000CCC2C2 /* dcm2nii in Resources */,
+				C809ECD519FA9B6700FE2604 /* dcm2nii in Resources */,
 				0984705A16CAC0CA00D50215 /* NIREPG1template.nii.gz in Resources */,
-				C84E616319FA968000CCC2C2 /* c3d in Resources */,
+				C809ECD419FA9B6700FE2604 /* c3d in Resources */,
 				C82CDF5A19F05E480080BCEC /* Images.xcassets in Resources */,
 				0984705B16CAC0CA00D50215 /* NIREPG1template_InverseWarp.nii.gz in Resources */,
 				0949D26D1898619D00A14D74 /* NIREPG1_3tissue.nii.gz in Resources */,
 				095ECE0C16CC48E800BC9058 /* fslmachtype.sh in Resources */,
 				095ECE0D16CC48E800BC9058 /* init.sh in Resources */,
-				C84E616519FA968000CCC2C2 /* ImageMath in Resources */,
+				C809ECD619FA9B6700FE2604 /* ImageMath in Resources */,
 				C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */,
 				09452C5616CC6D07003A3007 /* antsIntroduction.sh in Resources */,
 				E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */,

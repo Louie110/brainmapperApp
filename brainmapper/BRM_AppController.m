@@ -15,8 +15,7 @@
 #include <stdio.h>
 
 @implementation BRM_AppController;
-@synthesize inclSegm, textField, targetPathCtl, destPath, resPath, window, ctPathCtl, mriPathCtl;
-@synthesize destPathPopover, checkBoxesPopover, tableViewPopover, progressPopover;
+@synthesize resPath;
 
 NSString *updateFilePath, *logPath, *dcmPath;
 NSFileManager *fileManager;
@@ -25,6 +24,7 @@ NSString *Time;
 NSTask *stackingTask;
 int stackingCompleted = 0;
 Boolean programFinished = false;
+Boolean dbugMode = true;
 NSThread* analysisThread;
 BRM_Analysis *analysisObj;
 
@@ -33,21 +33,17 @@ BRM_Analysis *analysisObj;
 	self = [super init];
     if(self){
         NSLog( @"init" );
-        destPath = [[NSString alloc] init];
-        _mriPath = [[NSString alloc] init];
-        _ctPath = [[NSString alloc] init];
+        
+        //For checking to see that we have the right resources, not actually involved in coregistration
+        resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
+        NSLog(@"resource path is: %@", resPath);
+        NSError *err;
+        fileManager= [NSFileManager defaultManager];
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
+        NSLog(@"contents of respath directory:%@",contents);
         
     }
-    
-    //For checking to see that we have the right resources, not actually involved in coregistration
-    resPath=[NSString stringWithFormat:@"%@",[[NSBundle mainBundle] resourcePath]];
-    NSLog(@"resource path is: %@", resPath);
-    NSError *err;
-    inclSegm = true;
-    fileManager= [NSFileManager defaultManager];
-    NSArray *contents = [fileManager contentsOfDirectoryAtPath:resPath error:&err];
-    NSLog(@"contents of respath directory:%@",contents);
-    
+ 
     return self;
     
 }
@@ -58,8 +54,6 @@ BRM_Analysis *analysisObj;
     [textField setEditable:FALSE];
     [[textField cell] setWraps:TRUE];
     [startButton setTitle:@"start"];
-    [processInd setStyle:NSProgressIndicatorBarStyle];
-    [processInd setIndeterminate:NO];
     
     [targetPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
     [mriPathCtl setDoubleAction:@selector(pathControlDoubleClick:)];
@@ -88,11 +82,8 @@ BRM_Analysis *analysisObj;
     NSLog(@"logPath is: %@", logPath);
     freopen([logPath fileSystemRepresentation], "a+",stderr);
 }
--(void)incrementProgress:(NSNumber*)target {
-    double delta = [target doubleValue];
-    [processInd setDoubleValue:delta];
-    [processInd displayIfNeeded];
-}
+
+
 -(void)pathControlDoubleClick:(id)sender {
     if ([targetPathCtl clickedPathComponentCell] != nil) {
         [[NSWorkspace sharedWorkspace] openURL:[targetPathCtl URL]];
@@ -129,18 +120,14 @@ BRM_Analysis *analysisObj;
                                                  selector:@selector(updateNotiHandler:)
                                                      name:@"update"
                                                    object:nil];
-
-        // do Start-button action
-        Boolean hasDepth=false;
-        NSLog(@"Start started, with: has depth? %i and inclSegm? %i....operations on  %@ with priority: %f", !hasDepth, !inclSegm, [[NSThread currentThread] description], [[NSThread currentThread] threadPriority]);
-        
+       
         //specify output directory
-        destPath = [[targetPathCtl URL] path];
-        _mriPath = [[mriPathCtl URL] path];
-        _ctPath = [[ctPathCtl URL] path];
+        NSString *targetPath = [[NSString alloc] initWithString:[[targetPathCtl URL] path]];
+        NSString *mriPath = [[NSString alloc] initWithString:[[mriPathCtl URL] path]];
+        NSString *ctPath = [[NSString alloc] initWithString:[[ctPathCtl URL] path]];
         
         //create txt update file
-        updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt",destPath];
+        updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt", targetPath];
         system([[NSString stringWithFormat:@"echo This is the Update File >> %@", updateFilePath] UTF8String]);
         system([[NSString stringWithFormat:@"echo Loading images >> %@", updateFilePath] UTF8String]);
         NSLog(@"Update File created? %@", updateFilePath);
@@ -149,53 +136,50 @@ BRM_Analysis *analysisObj;
         [self monitorFile:updateFilePath];
         
         // Redirect Log To results folder
-        NSString* logFilePath = [NSString stringWithFormat:@"%@/logFile.txt", destPath];
+        NSString* logFilePath = [NSString stringWithFormat:@"%@/main.log", targetPath];
         [self redirectNSLogToFile:logFilePath];
       
         //Check if MRI array and CT arrays are empty and if destPath hasn't been changed from /Applications......
         //If so, alert the user and return
-        if ([destPath isEqualToString:@"/Applications"]) {
+        if ([targetPath isEqualToString:@"/Applications"]) {
             [textField setStringValue:@"Please specify a destination folder for the coregistered images"];
-            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
-        if (_mriPath == nil) {
+        if (mriPath == nil) {
             NSLog(@"no mri dcm input");
             [textField setStringValue:@"No MRI dicom images detected. Please drag one DICOM from MRI into path bar"];
-            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
-        if (_ctPath == nil) {
+        if (ctPath == nil) {
             NSLog(@"no ct dcm input");
             [textField setStringValue:@"No CT dicom images detected. Please drag one DICOM from CT into path bar"];
-            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
-        if (![_mriPath hasSuffix:@".dcm"]) {
+        if (![mriPath hasSuffix:@".dcm"]) {
             NSLog(@"mri images not dicom");
             [textField setStringValue:@"Please drag one DICOM file from the MRI folder into path bar and presss Start again"];
-            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
-        if (![_ctPath hasSuffix:@".dcm"]) {
+        if (![ctPath hasSuffix:@".dcm"]) {
             [textField setStringValue:@"Please drag one DICOM file from the CT folder into path bar and presss Start again"];
-            [self incrementProgress:[NSNumber numberWithDouble:0.0]];
             [startButton setState:0];
             return;
         }
         
         //when running, the title of the button should change to "stop"
         [startButton setTitle:@"Stop"];
+        
   
-        analysisObj = [[BRM_Analysis alloc] initWithMriPath:_mriPath
-                                                     ctPath:_ctPath
-                                                   destPath:destPath
+        analysisObj = [[BRM_Analysis alloc] initWithMriPath:mriPath
+                                                     ctPath:ctPath
+                                                   destPath:targetPath
                                                     resPath:resPath
-                                                    doSegm:inclSegm];
+                                                    doSegm:[doSegmentationBtn state]
+                                                    debugMode:dbugMode];
 
         analysisThread = [[NSThread alloc] initWithTarget:analysisObj
                                                  selector:@selector(startAnalysis)
@@ -210,7 +194,6 @@ BRM_Analysis *analysisObj;
                                                   object:analysisThread];
         
         [analysisThread start];
-        NSLog(@"Finished Back in Main");
     }
 }
 
@@ -220,11 +203,11 @@ BRM_Analysis *analysisObj;
     // Done with the analysis... Time to clean up.
     NSLog(@"Analysis finished...");
     if ([analysisObj isAborted]) {
-        NSLog(@"Analysis aborted");
+        NSLog(@"Analysis aborted.");
     }
     [startButton setTitle:@"Start"];
+    [startButton setState:0];
     programFinished = true;
-    [self incrementProgress:[NSNumber numberWithDouble:0.0]];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

@@ -16,8 +16,9 @@ NSTask* coregTask;
 NSMutableArray* tasks;
 Boolean isAborted = false;
 Boolean doSegmentation = false;
+Boolean debugMode = false;
 
--(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath doSegm:(Boolean) segm
+-(BRM_Analysis *) initWithMriPath: (NSString *)mri_p ctPath:(NSString*)ct_p destPath:(NSString*)dstPath resPath:(NSString *)rsPath doSegm:(Boolean) segm debugMode:(Boolean) dBugMode
 {
     self = [super init];
     if (self){
@@ -25,6 +26,7 @@ Boolean doSegmentation = false;
         [self setCtPath:ct_p];
         [self setDestPath:dstPath];
         [self setResPath:rsPath];
+        debugMode = dBugMode;
         doSegmentation = segm;
         _fileManager= [NSFileManager defaultManager];
         updateFilePath = [NSString stringWithFormat:@"%@/updateFile.txt",destPath];
@@ -204,7 +206,7 @@ Boolean doSegmentation = false;
         coregTask = [[NSTask alloc] init];
         [tasks addObject:coregTask];
         NSString *t = [NSString stringWithFormat:@"%@",shellString];
-        NSString * doSegmStr = (doSegmentation) ? @"True" : @"False";
+        NSString * doSegmStr = (doSegmentation) ? @"true" : @"false";
         [coregTask setLaunchPath: t];
         [coregTask setArguments: [NSArray arrayWithObjects:execPath, resPath, destPath, updateFilePath, doSegmStr, @"false", @"2000", nil]];
 
@@ -222,6 +224,11 @@ Boolean doSegmentation = false;
     NSString* fileToDelete;
     NSLog(@"In cleanup");
     NSMutableArray *keepFiles = [[NSMutableArray alloc] init];
+    
+    // Don't clean anything up in DebugMode
+    if (debugMode){
+        return;
+    }
     
     //Case 1: clean up files after application finishes
     if (!isAborted) {

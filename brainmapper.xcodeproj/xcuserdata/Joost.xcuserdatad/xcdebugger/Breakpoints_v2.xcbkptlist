@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "brainmapper/BRM_AppController.m"
-            timestampString = "435810257.251812"
+            timestampString = "435861526.136271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "-start:"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,29 +26,29 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "brainmapper/BRM_Analysis.m"
-            timestampString = "435614125.325636"
+            timestampString = "435861526.136271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
-            landmarkName = "-initWithMriPath:ctPath:destPath:resPath:doSegm:"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "-initWithMriPath:ctPath:destPath:resPath:doSegm:debugMode:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "brainmapper/BRM_Analysis.m"
-            timestampString = "435807090.202368"
+            filePath = "brainmapper/BRM_AppController.m"
+            timestampString = "435858056.85931"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11"
-            endingLineNumber = "11"
-            landmarkName = "@implementation BRM_Analysis"
-            landmarkType = "3">
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "resPath"
+            landmarkType = "19">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
