@@ -91,6 +91,9 @@ CT=${IMAGEPATH}/ct.nii.gz # with electrodes
 #resection=20070922_t2w003_resectedRegion.nii.gz
 MRF_smoothness=0.1
 
+# Copy labels file to final folder
+cp ${RESPATH}/templateCorticalLabels.txt ${IMAGEPATH}/templateCorticalLabels.txt
+
 # strip the skull in T1
 echo "COREGISTRATION.SH: Stripping the skull from the T1 images."
 echo "Stripping the skull from the T1 images." >> ${UPDATEPATH}
@@ -153,12 +156,13 @@ ${RESPATH}/Unburying.sh ${IMAGEPATH} $RESPATH $UPDATEPATH
 unburied="unburied_";
 
 # combine electrodes with T1 segmentation
-echo "COREGISTRATION.SH: Combining electrodes with T1 segmentation."
-echo "Combining electrodes with T1 segmentation." >> ${UPDATEPATH}
 if [ "$SEGMENT" = "true" ]; then
+  echo "COREGISTRATION.SH: Combining electrodes with T1 segmentation."
+  echo "Combining electrodes with T1 segmentation." >> ${UPDATEPATH}
+  c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o ${IMAGEPATH}/${unburied}electrode_seg.nii.gz
 
-  c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
-  cp ${unburied}seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
+#  c3d ${unburied}electrode_aligned.nii.gz -scale 40 seg35labels_prior0.5_mrf${MRF_smoothness}.nii.gz -add -clip 0 40 -o seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz
+#  cp seg35labels_prior0.5_mrf${MRF_smoothness}_electro.nii.gz ${IMAGEPATH}/finalImages/${unburied}electrode_seg.nii.gz
   #cd ${IMAGEPATH}
   #Open ITK-SNAP in background so nothing freezes...
   #itksnap=/Applications/ITK-SNAP.app/Contents/MacOS/InsightSNAP

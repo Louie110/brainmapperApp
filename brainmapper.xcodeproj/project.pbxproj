@@ -34,6 +34,7 @@
 		C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8CDF383164809AB00BC4F9C /* MainMenu.xib */; };
 		C8D1F4F619F996BC006FABE3 /* BRMIcon_16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */; };
 		C8E3442C16497EA000A42105 /* BRM_AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C8E3442B16497EA000A42105 /* BRM_AppController.m */; };
+		C8E5723F19FDB73B005B1D4E /* templateCorticalLabels.txt in Resources */ = {isa = PBXBuildFile; fileRef = C8E5723E19FDB73B005B1D4E /* templateCorticalLabels.txt */; };
 		C8F433F919F54978001A013E /* BRM_Analysis.m in Sources */ = {isa = PBXBuildFile; fileRef = C8F433F819F54978001A013E /* BRM_Analysis.m */; };
 		E1E99FD9179F3A0200CFB87B /* BRMPortalLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FD8179F3A0200CFB87B /* BRMPortalLogo.png */; };
 		E1E99FE317A2C77200CFB87B /* Coregistration.sh in Resources */ = {isa = PBXBuildFile; fileRef = E1E99FE217A2C72D00CFB87B /* Coregistration.sh */; };
@@ -73,6 +74,7 @@
 		C8D1F4F519F996BC006FABE3 /* BRMIcon_16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BRMIcon_16x16.png; sourceTree = "<group>"; };
 		C8E3442A16497EA000A42105 /* BRM_AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_AppController.h; sourceTree = "<group>"; };
 		C8E3442B16497EA000A42105 /* BRM_AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_AppController.m; sourceTree = "<group>"; };
+		C8E5723E19FDB73B005B1D4E /* templateCorticalLabels.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = templateCorticalLabels.txt; sourceTree = "<group>"; };
 		C8F433F719F54978001A013E /* BRM_Analysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRM_Analysis.h; sourceTree = "<group>"; };
 		C8F433F819F54978001A013E /* BRM_Analysis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRM_Analysis.m; sourceTree = "<group>"; };
 		E17D2CE917AF9F730082E560 /* Unburying.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Unburying.sh; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 		0984704C16CAC06700D50215 /* templates */ = {
 			isa = PBXGroup;
 			children = (
+				C8E5723E19FDB73B005B1D4E /* templateCorticalLabels.txt */,
 				0949D26C1898619D00A14D74 /* NIREPG1_3tissue.nii.gz */,
 				0984705616CAC0C900D50215 /* NIREPG1template_35labels.nii.gz */,
 				0984705716CAC0CA00D50215 /* NIREPG1template.nii.gz */,
@@ -269,6 +272,7 @@
 				C8CDF385164809AB00BC4F9C /* MainMenu.xib in Resources */,
 				C809ECD119FA9B6700FE2604 /* ANTS in Resources */,
 				C809ECD919FA9B6700FE2604 /* WarpImageMultiTransform in Resources */,
+				C8E5723F19FDB73B005B1D4E /* templateCorticalLabels.txt in Resources */,
 				C873BCC516552C65000E599B /* helpfiles in Resources */,
 				0984705916CAC0CA00D50215 /* NIREPG1template_35labels.nii.gz in Resources */,
 				C809ECD519FA9B6700FE2604 /* dcm2nii in Resources */,

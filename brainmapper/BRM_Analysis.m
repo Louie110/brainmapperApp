@@ -70,6 +70,7 @@ Boolean debugMode = false;
     [[NSNotificationCenter defaultCenter] postNotificationName: @"update"
                                                             object:nil
                                                           userInfo:userInfo];
+    
     [self cleanUp];
     
 }
@@ -232,11 +233,12 @@ Boolean debugMode = false;
     
     //Case 1: clean up files after application finishes
     if (!isAborted) {
-
+        
+        [keepFiles addObject:[NSString stringWithFormat:@"%@/templateCorticalLabels.txt", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath]];
-        [keepFiles addObject:[NSString stringWithFormat:@"%@/electrode_seg.nii.gz", destPath]];
+        //[keepFiles addObject:[NSString stringWithFormat:@"%@/electrode_seg.nii.gz", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/unburied_electrode_aligned.nii.gz", destPath]];
-        [keepFiles addObject:[NSString stringWithFormat:@"%@/electrode_aligned.nii.gz", destPath]];
+        //[keepFiles addObject:[NSString stringWithFormat:@"%@/electrode_aligned.nii.gz", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/mri_brain.nii.gz", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/logFile.txt", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/coregister.log", destPath]];
