@@ -24,7 +24,7 @@ NSString *Time;
 NSTask *stackingTask;
 int stackingCompleted = 0;
 Boolean programFinished = false;
-Boolean dbugMode = true;
+Boolean dbugMode = false;
 NSThread* analysisThread;
 BRM_Analysis *analysisObj;
 
