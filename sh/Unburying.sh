@@ -23,7 +23,7 @@ c3d ${IMAGEPATH}/electrode_aligned.nii.gz -binarize -o eImg.img
 
 # 1.5
 # ad hoc cleaning of wires outside brain
-c3d ${IMAGEPATH}/mri_brain_mask.nii.gz -dilate 1 5x5x5mm electrode_aligned.nii.gz -times -o electrode_aligned_cleanup.nii.gz
+c3d ${IMAGEPATH}/mri_brain_mask.nii.gz -dilate 1 2x2x2mm electrode_aligned.nii.gz -times -o electrode_aligned_cleanup.nii.gz
 c3d ${IMAGEPATH}/electrode_aligned_cleanup.nii.gz -binarize -o eImg.img
 
 #2. get centroids:
@@ -39,14 +39,17 @@ rm -f eCent.txt
 rm -f eCenters.txt
 rm -f eCenters2.txt
 
+counter = 0
 for i in `seq 1 $numCOMPS`; do
 echo Locating electrode: $i
   c3d mImg.img -threshold $i $i 1 0 -o nImg.img
   elecSize=$(c3d nImg.img -voxel-sum | awk '{print $3}')
-  if [[ $elecSize -gt 20 ]] ; then
+  if [[ $elecSize -gt 10 ]] ; then
     c3d nImg.img -centroid >> eCent.txt
+    (( counter++ ))
   fi
 done
+echo "Added " $counter " elements from " $numCOMPS " components."
 
 cat eCent.txt | sed -e '/VOX/d' -e '/There/d' -e '/Largest/d' -e 's/[^0-9.-]/ /g' >> eCenters.txt #(this gets rid of unneccessary info in the txt file)
 sed -e 's/$/ 1/' eCenters.txt > eCenters2.txt
