@@ -14,7 +14,7 @@
 		<string>https://github.com/ieeg-portal/brainmapperApp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>brainmapper.xcodeproj/project.xcworkspace</string>
+	<string>brainmapper.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C4D249C90079553051692634E1C17771A11A71A2</key>

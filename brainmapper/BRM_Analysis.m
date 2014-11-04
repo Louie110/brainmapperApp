@@ -234,7 +234,7 @@ Boolean debugMode = false;
     //Case 1: clean up files after application finishes
     if (!isAborted) {
         
-        [keepFiles addObject:[NSString stringWithFormat:@"%@/templateCorticalLabels.txt", destPath]];
+        [keepFiles addObject:[NSString stringWithFormat:@"%@/Cortical_Labels.txt", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/unburied_electrode_seg.nii.gz", destPath]];
         //[keepFiles addObject:[NSString stringWithFormat:@"%@/electrode_seg.nii.gz", destPath]];
         [keepFiles addObject:[NSString stringWithFormat:@"%@/unburied_electrode_aligned.nii.gz", destPath]];
